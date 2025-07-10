@@ -10,7 +10,6 @@ public class GridManager : MonoBehaviour
     private Transform[,] logicGrid;
     void Start()
     {
-        //transform.position = new Vector3( transform.position.x-width, transform.position.y-height, transform.position.z);
         logicGrid = new Transform[width, height];//dizi
         GenerateGrid();
     }
@@ -32,5 +31,38 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public bool CanPlaceBlock(BlockData blockData, Vector2Int gridPosition)
+    {
+        foreach(Vector2Int cellOffset in blockData.cells)
+        {
+            Vector2Int pos=gridPosition + cellOffset;
+            if(!IsWithinGrid(pos.x, pos.y))
+            {
+                return false;
+            }
+            if (IsCellOccupied(pos.x, pos.y)) 
+            {
+                return false;
+            }  
+        }
+        return true;
+    }
+
+    public bool IsWithinGrid(int x, int y)
+    {
+        return (x>=0 && y>=0 && x<width && y<height);
+    }
+    public bool IsCellOccupied(int x, int y)
+    {
+        return logicGrid[x, y] != null;
+    }
+    public void PlaceBlock(BlockData blockData, Vector2Int gridPos)
+    {
+        foreach(Vector2Int offset in blockData.cells)
+        {
+            Vector2Int pos = gridPos + offset;
+            logicGrid[pos.x, pos.y] = transform;
+        }
+    }
    
 }
