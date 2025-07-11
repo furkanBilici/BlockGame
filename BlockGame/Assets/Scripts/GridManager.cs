@@ -10,9 +10,12 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject gridPrefab;
 
     private Transform[,] logicGrid;
-    void Start()
+    private void Awake()
     {
         logicGrid = new Transform[width, height];//dizi
+    }
+    void Start()
+    { 
         GenerateGrid();
     }
     void GenerateGrid()
