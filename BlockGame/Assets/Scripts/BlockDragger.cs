@@ -11,7 +11,7 @@ public class BlockDragger : MonoBehaviour
     public bool isPlaced = false;
     public bool isDragging = false;
     const int draggingSortingOrder = 10;
-    const int droppedSortingOrder = 1;
+    const int droppedSortingOrder = 2;
 
     private void Awake()
     {

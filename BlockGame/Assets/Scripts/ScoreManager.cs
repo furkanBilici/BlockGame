@@ -11,6 +11,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private int currentScore=0;
+    private int highestScore = 0;
     public static ScoreManager Instance { get; private set; }
 
     private void Awake()
@@ -20,6 +21,7 @@ public class ScoreManager : MonoBehaviour
     }
     private void Start()
     {
+        highestScore=PlayerPrefs.GetInt("HighestScore", 0);
         UpdateScoreUi();
     }
 
@@ -40,5 +42,13 @@ public class ScoreManager : MonoBehaviour
     {
         scoreText.text = "Score: " + currentScore;
     }
-
+    public void CheckHighestScore()
+    {
+        if (highestScore < currentScore)
+        {
+            highestScore = currentScore;    
+            PlayerPrefs.SetInt("HighestScore",highestScore);
+            PlayerPrefs.Save(); 
+        }
+    }
 }

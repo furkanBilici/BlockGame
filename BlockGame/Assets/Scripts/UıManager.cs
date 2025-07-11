@@ -11,7 +11,10 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
     public GameObject gameoverText;
     public GameObject continueButton;
-
+    public TextMeshProUGUI highScore;
+    public GameObject scoreTextEnd;
+    public GameObject scoreText;
+    
 
     void Awake()
     {
@@ -21,8 +24,13 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOverPanel()
     {
+        ScoreManager.Instance.CheckHighestScore();  
         gameoverText.SetActive(true);
         panel.SetActive(true);
+        scoreTextEnd.SetActive(true);
+        scoreTextEnd.GetComponent<TextMeshProUGUI>().text = scoreText.GetComponent<TextMeshProUGUI>().text;
+        scoreText.SetActive(false);          
+        highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
     }
 
     public void RestartGame()
