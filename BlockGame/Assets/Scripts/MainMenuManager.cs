@@ -18,4 +18,8 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
+    private void OnApplicationQuit()
+    {
+        
+    }
 }
