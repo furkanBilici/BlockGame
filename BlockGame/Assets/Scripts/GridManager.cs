@@ -44,6 +44,7 @@ public class GridManager : MonoBehaviour
 
     public void PlaceBlock(GameObject blockObject, Vector2Int gridPosition)
     {
+
         BlockData blockData = blockObject.GetComponent<Block>().data;
         foreach (Vector2Int cellOffset in blockData.cells)
         {
@@ -59,7 +60,7 @@ public class GridManager : MonoBehaviour
         }
         blockObject.transform.parent = this.transform;
 
-        bool linesWereCleared = CheckForCompletedLines(logicGrid,true);
+        bool linesWereCleared = CheckForCompletedLines();
 
         if (!linesWereCleared)
         {
@@ -67,7 +68,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool CheckForCompletedLines(Transform[,] logicGrid, bool delete)
+    private bool CheckForCompletedLines()
     {
         List<int> completedRows = new List<int>();
         for (int y = 0; y < height; y++)
@@ -87,17 +88,11 @@ public class GridManager : MonoBehaviour
 
         if (completedRows.Count > 0 || completedCols.Count > 0)
         {
-            if (delete) 
-            {
-                int totalLines = completedRows.Count + completedCols.Count;
-                if (ScoreManager.Instance != null) ScoreManager.Instance.AddScore(totalLines);
-                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CleanLineSound");
-                StartCoroutine(ClearLinesRoutine(completedRows, completedCols));
-            }
-            else
-            {
+            int totalLines = completedRows.Count + completedCols.Count;
+            if (ScoreManager.Instance != null) ScoreManager.Instance.AddScore(totalLines);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CleanLineSound");
+            StartCoroutine(ClearLinesRoutine(completedRows, completedCols));
 
-            }
             return true;
         }
 
@@ -219,13 +214,14 @@ public class GridManager : MonoBehaviour
         return false;
     }
     private Transform[,] logicGridVisual;
-    public void CheckForCompletedLinesVisually(Block block, Vector2Int gridPos)
+    public void CheckForCompletedLinesVisually(GameObject blockObject, Vector2Int gridPos)
     {
+        BlockData blockData = blockObject.GetComponent<Block>().data;
         logicGridVisual = (Transform[,])logicGrid.Clone();
-        foreach (Vector2Int cellOffset in block.data.cells) 
+        foreach (Vector2Int cellOffset in blockData.cells) 
         {
             Vector2Int targetPos= cellOffset+gridPos;
-            foreach (Transform childCell in block.transform)
+            foreach (Transform childCell in blockObject.transform)
             {
                 if (Vector2.Distance(childCell.localPosition, (Vector2)cellOffset) < 0.01f)
                 {
@@ -234,9 +230,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-        CheckForCompletedLines(logicGridVisual, false);
-        
-        
+        //CheckForCompletedLines(blockObject,false);        
     }
 
     [Header("Baþlangýç Bloklarý Ayarlarý")]
