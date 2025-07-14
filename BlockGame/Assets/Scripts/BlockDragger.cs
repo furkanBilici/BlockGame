@@ -10,25 +10,30 @@ public class BlockDragger : MonoBehaviour
     private Vector3 initialPosition;
 
     private GridManager gridManager;
-    private bool isPlaced = false;
+    public bool isPlaced = false;
     private bool isDragging = false;
 
     // Sabitler daha okunaklý yapar
     private const int DRAGGING_SORTING_ORDER = 10;
     private const int PLACED_SORTING_ORDER = 0;
 
+    
+
     private void Awake()
     {
         mainCamera = Camera.main;
         blockParent = transform.parent;
-        gridManager = FindObjectOfType<GridManager>();
+        gridManager = FindFirstObjectByType<GridManager>();
     }
 
     void OnMouseDown()
     {
         if (isPlaced) return;
-
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
         isDragging = true;
+
+        GhostBlockCreator();
+        
         initialPosition = blockParent.position;
         offset = blockParent.position - GetMouseWorldPosition();
         SetSortingOrderOfChildren(DRAGGING_SORTING_ORDER);
@@ -38,13 +43,15 @@ public class BlockDragger : MonoBehaviour
     {
         if (!isDragging) return;
         blockParent.position = GetMouseWorldPosition() + offset;
+        ShowGhost();   
     }
 
     void OnMouseUp()
     {
         if (!isDragging) return;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
+        Destroy(ghostBlock);
         isDragging = false;
-
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
         Block block = blockParent.GetComponent<Block>();
 
@@ -67,6 +74,7 @@ public class BlockDragger : MonoBehaviour
             ReturnToInitialPosition();
         }
     }
+
 
     private void SetAsPlaced()
     {
@@ -98,4 +106,37 @@ public class BlockDragger : MonoBehaviour
         mousePoint.z = -mainCamera.transform.position.z;
         return mainCamera.ScreenToWorldPoint(mousePoint);
     }
+
+    private GameObject ghostBlock;
+    float ghostBlockVisuality = 0.6f;
+    private void ShowGhost()
+    {
+        Block block=blockParent.GetComponent<Block>();
+        Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
+        if (gridManager.CanPlaceBlock(block.data, gridPos))
+        {
+            ghostBlock.transform.position = new Vector2(gridPos.x,gridPos.y);
+            ghostBlock.SetActive(true);
+        }
+        else
+        {
+            ghostBlock.SetActive(false);
+        }
+    }
+
+    void GhostBlockCreator()
+    {
+        ghostBlock = Instantiate(blockParent.gameObject);
+
+        foreach (SpriteRenderer sr in ghostBlock.GetComponentsInChildren(typeof(SpriteRenderer))) 
+        {
+            Color color = sr.color;
+            color.a = ghostBlockVisuality;
+            sr.color = color;
+        }
+
+        ghostBlock.SetActive(false);
+    }
+
+
 }

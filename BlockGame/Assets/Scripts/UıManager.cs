@@ -24,6 +24,8 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOverPanel()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("GameOverSound");
+       
         ScoreManager.Instance.CheckHighestScore();  
         gameoverText.SetActive(true);
         panel.SetActive(true);
@@ -35,19 +37,27 @@ public class UIManager : MonoBehaviour
 
     public void RestartGame()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void MainMenu()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("OutGame");
+       
         SceneManager.LoadScene(0);
     }
     public void StopGame()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+      
         continueButton.SetActive(true);
         panel.SetActive(true);
     }
     public void Continue()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+        
         panel.SetActive(false);
         continueButton.SetActive(false);
     }

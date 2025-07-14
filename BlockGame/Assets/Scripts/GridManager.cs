@@ -13,7 +13,6 @@ public class GridManager : MonoBehaviour
 
     private Transform[,] logicGrid;
     private bool isClearing = false;
-
     private void Awake()
     {
         logicGrid = new Transform[width, height];
@@ -22,6 +21,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         GenerateGrid();
+        GenerateInitialBlocks();
     }
 
     void GenerateGrid()
@@ -59,7 +59,7 @@ public class GridManager : MonoBehaviour
         }
         blockObject.transform.parent = this.transform;
 
-        bool linesWereCleared = CheckForCompletedLines();
+        bool linesWereCleared = CheckForCompletedLines(logicGrid,true);
 
         if (!linesWereCleared)
         {
@@ -67,7 +67,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool CheckForCompletedLines()
+    private bool CheckForCompletedLines(Transform[,] logicGrid, bool delete)
     {
         List<int> completedRows = new List<int>();
         for (int y = 0; y < height; y++)
@@ -87,9 +87,17 @@ public class GridManager : MonoBehaviour
 
         if (completedRows.Count > 0 || completedCols.Count > 0)
         {
-            int totalLines = completedRows.Count + completedCols.Count;
-            if (ScoreManager.Instance != null) ScoreManager.Instance.AddScore(totalLines);
-            StartCoroutine(ClearLinesRoutine(completedRows, completedCols));
+            if (delete) 
+            {
+                int totalLines = completedRows.Count + completedCols.Count;
+                if (ScoreManager.Instance != null) ScoreManager.Instance.AddScore(totalLines);
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CleanLineSound");
+                StartCoroutine(ClearLinesRoutine(completedRows, completedCols));
+            }
+            else
+            {
+
+            }
             return true;
         }
 
@@ -173,7 +181,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
+        
         isClearing = false;
         if (BlockSpawner.Instance != null) BlockSpawner.Instance.OnActionFinished();
 
@@ -209,5 +217,86 @@ public class GridManager : MonoBehaviour
             }
         }
         return false;
+    }
+    private Transform[,] logicGridVisual;
+    public void CheckForCompletedLinesVisually(Block block, Vector2Int gridPos)
+    {
+        logicGridVisual = (Transform[,])logicGrid.Clone();
+        foreach (Vector2Int cellOffset in block.data.cells) 
+        {
+            Vector2Int targetPos= cellOffset+gridPos;
+            foreach (Transform childCell in block.transform)
+            {
+                if (Vector2.Distance(childCell.localPosition, (Vector2)cellOffset) < 0.01f)
+                {
+                    logicGridVisual[targetPos.x, targetPos.y] = childCell;
+                    break;
+                }
+            }
+        }
+        CheckForCompletedLines(logicGridVisual, false);
+        
+        
+    }
+
+    [Header("Baþlangýç Bloklarý Ayarlarý")]
+    [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
+    [Range(0f, 0.5f)]
+    [SerializeField] private float initialFillPercentage = 0.2f; // %20
+    [SerializeField] private int maxPlacementTries = 50; // Sonsuz döngüyü önlemek için deneme sayýsý
+
+    private void GenerateInitialBlocks()
+    {
+        if (initialFillPercentage <= 0) return;
+
+        // Toplam hücre sayýsýna göre kaç hücre dolduracaðýmýzý hesapla
+        int totalCells = width * height;
+        int cellsToFill = Mathf.RoundToInt(totalCells * initialFillPercentage);
+        int cellsFilled = 0;
+        int tries = 0;
+
+        // Belirlediðimiz sayýda hücreyi doldurana veya deneme hakkýmýz bitene kadar devam et
+        while (cellsFilled < cellsToFill && tries < maxPlacementTries)
+        {
+            tries++;
+
+            // 1. Rastgele bir blok verisi al
+            BlockData randomBlockData = BlockSpawner.Instance.GetRandomBlockData();
+            if (randomBlockData == null) continue;
+
+            // 2. Rastgele bir konum seç
+            Vector2Int randomPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+
+            // 3. Bloðun oraya yerleþip yerleþemeyeceðini kontrol et
+            if (CanPlaceBlock(randomBlockData, randomPosition))
+            {
+                // 4. Yerleþebiliyorsa, yerleþtir.
+                // Bu, oyun baþýnda olduðu için animasyon veya ses istemiyoruz.
+                // Sadece mantýksal ve görsel olarak yerleþtireceðiz.
+                GameObject blockObject = Instantiate(BlockSpawner.Instance.blockBasePrefab, (Vector2)randomPosition, Quaternion.identity, this.transform);
+                blockObject.name = $"Initial_{randomBlockData.name}";
+
+                foreach (Vector2Int cellPos in randomBlockData.cells)
+                {
+                    // Görsel hücreleri oluþtur
+                    GameObject cell = Instantiate(randomBlockData.blockCellPrefab, blockObject.transform);
+                    cell.transform.localPosition = (Vector2)cellPos;
+                    cell.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+                    // Mantýksal grid'i güncelle
+                    Vector2Int targetPos = randomPosition + cellPos;
+                    logicGrid[targetPos.x, targetPos.y] = cell.transform;
+                }
+
+                // Tüm dragger'larý devre dýþý býrak
+                foreach (var dragger in blockObject.GetComponentsInChildren<BlockDragger>())
+                {
+                    dragger.isPlaced = true;
+                }
+
+                cellsFilled += randomBlockData.cells.Count;
+            }
+        }
+        Debug.Log($"{cellsFilled} hücre baþlangýçta dolduruldu.");
     }
 }

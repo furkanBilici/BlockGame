@@ -6,10 +6,10 @@ using UnityEngine;
 public class BlockSpawner : MonoBehaviour
 {
     [Header("Block Data")]
-    [SerializeField] private List<BlockData> allBlockData;
+    [SerializeField] public List<BlockData> allBlockData;
 
     [Header("Prefabs & Parents")]
-    [SerializeField] private GameObject blockBasePrefab;
+    [SerializeField] public GameObject blockBasePrefab;
     [SerializeField] private Transform spawnParent;
     [SerializeField] private List<Transform> spawnPositions;
 
@@ -22,7 +22,7 @@ public class BlockSpawner : MonoBehaviour
     {
         if (Instance != null) Destroy(gameObject);
         else Instance = this;
-        gridManager = FindObjectOfType<GridManager>();
+        gridManager = FindFirstObjectByType<GridManager>();
     }
 
     void Start()
@@ -48,7 +48,14 @@ public class BlockSpawner : MonoBehaviour
             HandleGameOver();
         }
     }
-
+    [Header("Colors")]
+    public Color[] colors;
+    Color randomColor;
+    Color GetRandomColor()
+    {
+        int random=Random.Range(0,colors.Length);
+        return colors[random];
+    }
     private void SpawnRandomBlockAt(Vector2 position)
     {
         if (allBlockData.Count == 0) return;
@@ -59,11 +66,13 @@ public class BlockSpawner : MonoBehaviour
         Block blockScript = blockObject.AddComponent<Block>();
         blockScript.data = selectedData;
         activeBlocks.Add(blockObject);
+        randomColor = GetRandomColor();
         foreach (Vector2Int cellPos in selectedData.cells)
         {
             GameObject cell = Instantiate(selectedData.blockCellPrefab, blockObject.transform);
             cell.transform.localPosition = (Vector2)cellPos;
-        }
+            cell.GetComponent<SpriteRenderer>().color = randomColor;
+        }    
     }
 
     // ARTIK TEK BÝR SÝNYAL FONKSÝYONU VAR! Bu, GridManager'dan çaðrýlacak.
@@ -112,4 +121,14 @@ public class BlockSpawner : MonoBehaviour
             activeBlocks.Remove(blockToRemove);
         }
     }
+
+    public BlockData GetRandomBlockData()
+    {
+        if (allBlockData.Count == 0) return null;
+
+        int randomIndex = Random.Range(0, allBlockData.Count);
+        return allBlockData[randomIndex];
+    }
+    
+
 }
