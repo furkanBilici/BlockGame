@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject panel;
+    public GameObject panel;
 
     public static UIManager Instance { get; private set; }
     public GameObject gameoverText;
@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI highScore;
     public GameObject scoreTextEnd;
     public GameObject scoreText;
+
+    public bool panelActive = false;
     
 
     void Awake()
@@ -21,11 +23,17 @@ public class UIManager : MonoBehaviour
         if (Instance != null) Destroy(gameObject);
         else Instance = this;
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            StopGame();
+        }  
+    }
     public void ShowGameOverPanel()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("GameOverSound");
-       
+       panelActive = true;
         ScoreManager.Instance.CheckHighestScore();  
         gameoverText.SetActive(true);
         panel.SetActive(true);
@@ -38,26 +46,26 @@ public class UIManager : MonoBehaviour
     public void RestartGame()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        
+        panelActive=false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void MainMenu()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("OutGame");
-       
+        panelActive = false;
         SceneManager.LoadScene(0);
     }
     public void StopGame()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-      
+        panelActive=true;
         continueButton.SetActive(true);
         panel.SetActive(true);
     }
     public void Continue()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        
+        panelActive = false;
         panel.SetActive(false);
         continueButton.SetActive(false);
     }

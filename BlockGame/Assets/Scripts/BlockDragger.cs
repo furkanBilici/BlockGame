@@ -28,7 +28,7 @@ public class BlockDragger : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (isPlaced) return;
+        if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
         isDragging = true;
 
@@ -41,14 +41,14 @@ public class BlockDragger : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (!isDragging) return;
+        if (!isDragging || UIManager.Instance.panelActive) return;
         blockParent.position = GetMouseWorldPosition() + offset;
         ShowGhost();   
     }
 
     void OnMouseUp()
     {
-        if (!isDragging) return;
+        if (!isDragging || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
         Destroy(ghostBlock);
         isDragging = false;
