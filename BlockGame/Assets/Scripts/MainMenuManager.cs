@@ -6,6 +6,7 @@ public class MainMenuManager : MonoBehaviour
 {
     public GameObject HighScore;
     public GameObject quitPanel;
+    public GameObject Text;
 
     private void Update()
     {
@@ -19,8 +20,9 @@ public class MainMenuManager : MonoBehaviour
             else
             {
                 quitPanel.SetActive(true);
-            }
+            } 
         }
+        TextAnimation();
     }
     private void Start()
     {
@@ -41,5 +43,24 @@ public class MainMenuManager : MonoBehaviour
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         quitPanel.SetActive(false);
+    }
+    public Vector3 minScale = Vector3.one;
+    public Vector3 maxScale = new Vector3(1.2f, 1.2f, 1f);
+    public float speed = 2f;
+
+    private bool growing = true;
+
+    void TextAnimation()
+    {
+        Text.transform.localScale = Vector3.Lerp(
+            Text.transform.localScale,
+            growing ? maxScale : minScale,
+            Time.deltaTime * speed
+        );
+
+        if (Vector3.Distance(Text.transform.localScale, maxScale) < 0.01f)
+            growing = false;
+        else if (Vector3.Distance(Text.transform.localScale, minScale) < 0.01f)
+            growing = true;
     }
 }

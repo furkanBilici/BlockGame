@@ -10439,6 +10439,7 @@ MonoBehaviour:
   highScore: {fileID: 495048761}
   scoreTextEnd: {fileID: 1546630029}
   scoreText: {fileID: 1134078445}
+  panelActive: 0
 --- !u!4 &1989152704
 Transform:
   m_ObjectHideFlags: 0

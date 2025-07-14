@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -13,9 +14,17 @@ public class GridManager : MonoBehaviour
 
     private Transform[,] logicGrid;
     private bool isClearing = false;
+
+    private SpriteRenderer[,] visualGridCells;
+    Color visualGridCellsColor;
+    int firstSortingOrder=0;
+    int lastSortingOrder=5;   
+
     private void Awake()
     {
         logicGrid = new Transform[width, height];
+        visualGridCells = new SpriteRenderer[width, height];
+        
     }
 
     void Start()
@@ -38,13 +47,19 @@ public class GridManager : MonoBehaviour
             {
                 GameObject newCell = Instantiate(gridCellPrefab, new Vector3(x, y, 0), Quaternion.identity, this.transform);
                 newCell.name = $"Cell({x},{y})";
+                visualGridCells[x, y] = newCell.GetComponent<SpriteRenderer>();
+                
             }
         }
+        visualGridCellsColor = visualGridCells[0, 0].color;
+        firstSortingOrder=visualGridCells[0, 0].sortingOrder;   
     }
+
+    Color placedBlockColor;
 
     public void PlaceBlock(GameObject blockObject, Vector2Int gridPosition)
     {
-
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
         BlockData blockData = blockObject.GetComponent<Block>().data;
         foreach (Vector2Int cellOffset in blockData.cells)
         {
@@ -58,6 +73,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+        placedBlockColor=blockObject.GetComponentInChildren<SpriteRenderer>().color;  
         blockObject.transform.parent = this.transform;
 
         bool linesWereCleared = CheckForCompletedLines();
@@ -133,7 +149,7 @@ public class GridManager : MonoBehaviour
             // Önce hepsini parlatalým
             foreach (Transform cell in cellsToClear)
             {
-                if (cell != null) cell.GetComponent<SpriteRenderer>().color = Color.white;
+                if (cell != null) cell.GetComponent<SpriteRenderer>().color = placedBlockColor;
             }
 
             yield return new WaitForSeconds(duration / 2);
@@ -213,27 +229,108 @@ public class GridManager : MonoBehaviour
         }
         return false;
     }
-    private Transform[,] logicGridVisual;
-    public void CheckForCompletedLinesVisually(GameObject blockObject, Vector2Int gridPos)
+    
+
+    public void HighlightLines(List<int> rows, List<int> cols, Color highlightColor)
     {
-        BlockData blockData = blockObject.GetComponent<Block>().data;
-        logicGridVisual = (Transform[,])logicGrid.Clone();
-        foreach (Vector2Int cellOffset in blockData.cells) 
+        // Önce tüm grid'i normale döndür
+        ResetGridColors();
+
+        if (rows != null)
         {
-            Vector2Int targetPos= cellOffset+gridPos;
-            foreach (Transform childCell in blockObject.transform)
+            foreach (int y in rows)
             {
-                if (Vector2.Distance(childCell.localPosition, (Vector2)cellOffset) < 0.01f)
+                for (int x = 0; x < width; x++)
                 {
-                    logicGridVisual[targetPos.x, targetPos.y] = childCell;
-                    break;
+                    visualGridCells[x, y].color = highlightColor;
+                    visualGridCells[x, y].sortingOrder = lastSortingOrder;
                 }
             }
         }
-        //CheckForCompletedLines(blockObject,false);        
+        if (cols != null)
+        {
+            foreach (int x in cols)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    visualGridCells[x, y].color = highlightColor;
+                    visualGridCells[x, y].sortingOrder = lastSortingOrder;
+                }
+            }
+        }
+    }
+    
+    public void ResetGridColors()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                visualGridCells[x, y].color = visualGridCellsColor; // Veya baþlangýç rengin neyse o.
+                visualGridCells[x,y].sortingOrder = firstSortingOrder;
+            }
+        }
+    }
+    public (List<int> rows, List<int> cols) SimulateLineCompletion(BlockData blockData, Vector2Int gridPosition)
+    {
+        // 1. Geçici bir mantýksal grid oluþtur ve mevcut grid'i üzerine kopyala.
+        // Bu, ana oyun durumunu bozmamanýn en güvenli yoludur.
+        Transform[,] simulatedGrid = (Transform[,])logicGrid.Clone();
+
+        // 2. Bloðu bu geçici grid'e "hayali" olarak yerleþtir.
+        // Herhangi bir null olmayan obje, hücrenin dolu olduðunu belirtmek için yeterlidir.
+        // 'transform' (GridManager'ýn kendi transform'u) bu iþ için kullanýlabilir.
+        foreach (var cellOffset in blockData.cells)
+        {
+            Vector2Int pos = gridPosition + cellOffset;
+            if (IsWithinGrid(pos.x, pos.y))
+            {
+                simulatedGrid[pos.x, pos.y] = this.transform;
+            }
+        }
+
+        // 3. Bu geçici grid üzerinde tamamlama kontrolü yap.
+        List<int> completedRows = new List<int>();
+        for (int y = 0; y < height; y++)
+        {
+            bool rowIsComplete = true;
+            for (int x = 0; x < width; x++)
+            {
+                if (simulatedGrid[x, y] == null)
+                {
+                    rowIsComplete = false;
+                    break;
+                }
+            }
+            if (rowIsComplete)
+            {
+                completedRows.Add(y);
+            }
+        }
+
+        List<int> completedCols = new List<int>();
+        for (int x = 0; x < width; x++)
+        {
+            bool colIsComplete = true;
+            for (int y = 0; y < height; y++)
+            {
+                if (simulatedGrid[x, y] == null)
+                {
+                    colIsComplete = false;
+                    break;
+                }
+            }
+            if (colIsComplete)
+            {
+                completedCols.Add(x);
+            }
+        }
+
+        // 4. Sonucu (tamamlanacak satýr ve sütun listelerini) geri döndür.
+        return (completedRows, completedCols);
     }
 
-    [Header("Baþlangýç Bloklarý Ayarlarý")]
+        [Header("Baþlangýç Bloklarý Ayarlarý")]
     [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
     [Range(0f, 0.5f)]
     [SerializeField] private float initialFillPercentage = 0.2f; // %20

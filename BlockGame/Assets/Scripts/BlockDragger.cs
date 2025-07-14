@@ -49,8 +49,10 @@ public class BlockDragger : MonoBehaviour
     void OnMouseUp()
     {
         if (!isDragging || UIManager.Instance.panelActive) return;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
+
+        
         Destroy(ghostBlock);
+        gridManager.ResetGridColors();
         isDragging = false;
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
         Block block = blockParent.GetComponent<Block>();
@@ -87,7 +89,9 @@ public class BlockDragger : MonoBehaviour
 
     private void ReturnToInitialPosition()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CannotPutBlock");
         blockParent.position = initialPosition;
+        gridManager.ResetGridColors();
         SetSortingOrderOfChildren(PLACED_SORTING_ORDER);
     }
 
@@ -117,10 +121,28 @@ public class BlockDragger : MonoBehaviour
         {
             ghostBlock.transform.position = new Vector2(gridPos.x,gridPos.y);
             ghostBlock.SetActive(true);
+            // --- YENÝ EKLENEN KISIM ---
+            // 1. Bu hamlenin hangi hatlarý tamamlayacaðýný simüle et.
+            var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
+
+            // 2. Eðer tamamlanacak hat varsa, onlarý hayalet blok renginde vurgula.
+            if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
+            {
+                // Hayalet bloðun rengini al (ilk hücresinden).
+                Color ghostColor = ghostBlock.GetComponentInChildren<SpriteRenderer>().color;
+                gridManager.HighlightLines(completedLines.rows, completedLines.cols, ghostColor);
+            }
+            else // Eðer tamamlanacak hat yoksa, tüm renkleri sýfýrla.
+            {
+                gridManager.ResetGridColors();
+            }
+            // --- BÝTÝÞ ---
         }
         else
         {
             ghostBlock.SetActive(false);
+            // Geçersiz bir hamle ise de renkleri sýfýrla.
+            gridManager.ResetGridColors();
         }
     }
 
