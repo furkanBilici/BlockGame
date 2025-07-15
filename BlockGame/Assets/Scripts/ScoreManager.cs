@@ -96,4 +96,9 @@ public class ScoreManager : MonoBehaviour
             PlayerPrefs.Save(); 
         }
     }
+    public int GetCurrentScore()
+    {
+        int score=currentScore;
+        return currentScore;
+    }
 }

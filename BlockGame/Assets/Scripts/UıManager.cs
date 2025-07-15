@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     public GameObject scoreTextEnd;
     public GameObject scoreText;
 
+    public int GameType = 0;//0 classic, 1 timed, 2 custom
+
     public bool panelActive = false;
     
 
@@ -25,8 +27,22 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
-        if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("GameMusic");
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopAllMusic();
+            if (GameType == 0)
+            {
+                AudioManager.Instance.PlayMusic("GameMusic");
+            }
+            if (GameType == 1)
+            {
+                AudioManager.Instance.PlayMusic("TimedGameMusic");
+            }
+            if (GameType == 2)
+            {
+                AudioManager.Instance.PlayMusic("CustomGameMusic");
+            }
+        }
     }
     private void Update()
     {
@@ -37,16 +53,25 @@ public class UIManager : MonoBehaviour
     }
     public void ShowGameOverPanel()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("GameOverSound");
-        if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("GameOverSound");
+            AudioManager.Instance.StopAllMusic();
+        }
         panelActive = true;
         ScoreManager.Instance.CheckHighestScore();  
         gameoverText.SetActive(true);
         panel.SetActive(true);
-        scoreTextEnd.SetActive(true);
-        scoreTextEnd.GetComponent<TextMeshProUGUI>().text = scoreText.GetComponent<TextMeshProUGUI>().text;
-        scoreText.SetActive(false);          
-        highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+        if (scoreTextEnd != null) 
+        {
+            scoreTextEnd.SetActive(true);
+            scoreTextEnd.GetComponent<TextMeshProUGUI>().text = scoreText.GetComponent<TextMeshProUGUI>().text;
+        }
+        if (scoreText != null) 
+        {
+            scoreText.SetActive(false);
+        }        
+        if(highScore!=null) highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
     }
 
     public void RestartGame()
@@ -64,9 +89,18 @@ public class UIManager : MonoBehaviour
     public void StopGame()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        panelActive=true;
-        continueButton.SetActive(true);
-        panel.SetActive(true);
+        if (!panelActive) {
+            panelActive = true;
+            continueButton.SetActive(true);
+            panel.SetActive(true);
+        }
+        else
+        {
+            panelActive = false;
+            continueButton.SetActive(false);
+            panel.SetActive(false);
+        }
+        
     }
     public void Continue()
     {
