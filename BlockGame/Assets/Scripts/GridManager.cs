@@ -334,7 +334,7 @@ public class GridManager : MonoBehaviour
     [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
     [Range(0f, 0.5f)]
     [SerializeField] private float initialFillPercentage = 0.2f; // %20
-    [SerializeField] private int maxPlacementTries = 50; // Sonsuz döngüyü önlemek için deneme sayýsý
+    [SerializeField] private int maxPlacementTries = 50; // sonsuz döngüyü önlemek için deneme sayýsý
 
     private void GenerateInitialBlocks()
     {

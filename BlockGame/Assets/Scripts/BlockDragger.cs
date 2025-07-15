@@ -121,22 +121,20 @@ public class BlockDragger : MonoBehaviour
         {
             ghostBlock.transform.position = new Vector2(gridPos.x,gridPos.y);
             ghostBlock.SetActive(true);
-            // --- YENÝ EKLENEN KISIM ---
-            // 1. Bu hamlenin hangi hatlarý tamamlayacaðýný simüle et.
+            // 1. bu hamlenin hangi hatlarý tamamlayacaðýný simüle et
             var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
 
-            // 2. Eðer tamamlanacak hat varsa, onlarý hayalet blok renginde vurgula.
+            // 2. eðer tamamlanacak hat varsa, onlarý hayalet blok renginde vurgula
             if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
             {
                 // Hayalet bloðun rengini al (ilk hücresinden).
                 Color ghostColor = ghostBlock.GetComponentInChildren<SpriteRenderer>().color;
                 gridManager.HighlightLines(completedLines.rows, completedLines.cols, ghostColor);
             }
-            else // Eðer tamamlanacak hat yoksa, tüm renkleri sýfýrla.
+            else // eðer tamamlanacak hat yoksa, tüm renkleri sýfýrla.
             {
                 gridManager.ResetGridColors();
             }
-            // --- BÝTÝÞ ---
         }
         else
         {
