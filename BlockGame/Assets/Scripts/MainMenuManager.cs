@@ -1,12 +1,16 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
     public GameObject HighScore;
     public GameObject quitPanel;
     public GameObject Text;
+    public GameObject settingPanel;
+    public Button sound;
+    public Button music;
 
     private void Update()
     {
@@ -26,6 +30,8 @@ public class MainMenuManager : MonoBehaviour
     }
     private void Start()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("MenuMusic");
         HighScore.SetActive(true);
         if(PlayerPrefs.GetInt("HighestScore",0)>0) HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
     }
@@ -43,6 +49,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         quitPanel.SetActive(false);
+        settingPanel.SetActive(false);
     }
     public Vector3 minScale = Vector3.one;
     public Vector3 maxScale = new Vector3(1.2f, 1.2f, 1f);
@@ -62,5 +69,38 @@ public class MainMenuManager : MonoBehaviour
             growing = false;
         else if (Vector3.Distance(Text.transform.localScale, minScale) < 0.01f)
             growing = true;
+    }
+    public void Settings()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+        settingPanel.SetActive(true);
+    }
+    public void CloseSound()
+    {
+        AudioManager.Instance.closeSounds=!AudioManager.Instance.closeSounds;
+        if (!AudioManager.Instance.closeSounds)
+        {
+            sound.GetComponentInChildren<TextMeshProUGUI>().text = "ON";
+            sound.image.color=Color.green;
+        }
+        else
+        {
+            sound.GetComponentInChildren<TextMeshProUGUI>().text = "OFF";
+            sound.image.color=Color.red;
+        }
+    }
+    public void CloseMusic()
+    {
+        AudioManager.Instance.closeMusics = !AudioManager.Instance.closeMusics;
+        if (!AudioManager.Instance.closeMusics)
+        {
+            music.GetComponentInChildren<TextMeshProUGUI>().text = "ON";
+            music.image.color = Color.green;
+        }
+        else
+        {
+            music.GetComponentInChildren<TextMeshProUGUI>().text = "OFF";
+            music.image.color = Color.red;
+        }
     }
 }

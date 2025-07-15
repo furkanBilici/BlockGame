@@ -16,6 +16,9 @@ public class BlockSpawner : MonoBehaviour
     private List<GameObject> activeBlocks = new List<GameObject>();
     private GridManager gridManager;
 
+    [Header("Oyun Dengesi")]
+    [SerializeField] private int maxSpawnAttempts = 50;
+
     public static BlockSpawner Instance { get; private set; }
 
     void Awake()
@@ -38,16 +41,46 @@ public class BlockSpawner : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (Transform pos in spawnPositions)
+        bool foundValidSet = false;
+
+        for (int attempt = 0; attempt < maxSpawnAttempts; attempt++)
         {
-            SpawnRandomBlockAt(pos.position);
+            List<BlockData> candidateData = new List<BlockData>();
+            for (int i = 0; i < spawnPositions.Count; i++)
+            {
+                candidateData.Add(GetRandomBlockData());
+            }
+
+            bool isSetValid = false;
+            foreach (BlockData data in candidateData)
+            {
+                if (gridManager.IsAnyMovePossible(data))
+                {
+                    isSetValid = true;
+                    break;
+                }
+            }
+
+            if (isSetValid)
+            {
+                for (int i = 0; i < spawnPositions.Count; i++)
+                {
+                    SpawnBlock(candidateData[i], spawnPositions[i].position);
+                }
+                foundValidSet = true;
+                break;
+            }
         }
 
-        if (IsGameOver())
+        if (!foundValidSet)
         {
+            Debug.LogError("GEÇERLÝ SET BULUNAMADI! OYUN BÝTÝYOR.");
             HandleGameOver();
         }
     }
+
+
+
     [Header("Colors")]
     public Color[] colors;
     Color randomColor;
@@ -56,23 +89,25 @@ public class BlockSpawner : MonoBehaviour
         int random=Random.Range(0,colors.Length);
         return colors[random];
     }
-    private void SpawnRandomBlockAt(Vector2 position)
+    private void SpawnBlock(BlockData data, Vector2 position)
     {
-        if (allBlockData.Count == 0) return;
-        int randomIndex = Random.Range(0, allBlockData.Count);
-        BlockData selectedData = allBlockData[randomIndex];
+        if (data == null) return;
+
         GameObject blockObject = Instantiate(blockBasePrefab, position, Quaternion.identity, spawnParent);
-        blockObject.name = selectedData.name;
+        blockObject.name = data.name;
+
         Block blockScript = blockObject.AddComponent<Block>();
-        blockScript.data = selectedData;
+        blockScript.data = data;
         activeBlocks.Add(blockObject);
+
+        // Renklendirme mantýðýný koruyoruz
         randomColor = GetRandomColor();
-        foreach (Vector2Int cellPos in selectedData.cells)
+        foreach (Vector2Int cellPos in data.cells)
         {
-            GameObject cell = Instantiate(selectedData.blockCellPrefab, blockObject.transform);
+            GameObject cell = Instantiate(data.blockCellPrefab, blockObject.transform);
             cell.transform.localPosition = (Vector2)cellPos;
             cell.GetComponent<SpriteRenderer>().color = randomColor;
-        }    
+        }
     }
 
     // ARTIK TEK BÝR SÝNYAL FONKSÝYONU VAR! Bu, GridManager'dan çaðrýlacak.

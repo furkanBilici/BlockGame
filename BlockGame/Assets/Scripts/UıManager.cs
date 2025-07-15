@@ -23,6 +23,11 @@ public class UIManager : MonoBehaviour
         if (Instance != null) Destroy(gameObject);
         else Instance = this;
     }
+    private void Start()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("GameMusic");
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) 
@@ -33,7 +38,8 @@ public class UIManager : MonoBehaviour
     public void ShowGameOverPanel()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("GameOverSound");
-       panelActive = true;
+        if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
+        panelActive = true;
         ScoreManager.Instance.CheckHighestScore();  
         gameoverText.SetActive(true);
         panel.SetActive(true);
