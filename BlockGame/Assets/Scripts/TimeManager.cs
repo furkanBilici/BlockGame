@@ -43,7 +43,11 @@ public class TimeManager : MonoBehaviour
     {
         if (ScoreManager.Instance.GetCurrentScore() >= point) 
         {
-            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("WinSound");
+            if (AudioManager.Instance != null && (!UIManager.Instance.panelActive))
+            {
+                AudioManager.Instance.PlaySFX("WinSound");
+                AudioManager.Instance.StopAllMusic();
+            }
             winScreen.SetActive(true);
             UIManager.Instance.panelActive = true;  
         }
