@@ -22,7 +22,7 @@ public class ScoreManager : MonoBehaviour
     }
     private void Start()
     {
-        highestScore=PlayerPrefs.GetInt("HighestScore", 0);
+       if(UIManager.Instance.GameType==0)highestScore=PlayerPrefs.GetInt("HighestScore", 0);
         UpdateScoreUi();
     }
 
@@ -92,7 +92,7 @@ public class ScoreManager : MonoBehaviour
         if (highestScore < currentScore)
         {
             highestScore = currentScore;    
-            PlayerPrefs.SetInt("HighestScore",highestScore);
+            if(UIManager.Instance.GameType==0) PlayerPrefs.SetInt("HighestScore",highestScore);
             PlayerPrefs.Save(); 
         }
     }

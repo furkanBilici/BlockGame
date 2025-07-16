@@ -4994,7 +4994,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 764126160}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StartTimedGame
+        m_MethodName: PlayCustomMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

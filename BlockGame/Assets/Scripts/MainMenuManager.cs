@@ -46,7 +46,7 @@ public class MainMenuManager : MonoBehaviour
         HighScore.SetActive(true);
         if (PlayerPrefs.GetInt("HighestScore", 0) > 0) HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
         
-        boardScale = PlayerPrefs.GetInt("boardScale", 0);
+        boardScale = PlayerPrefs.GetInt("boardScale", 1);
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
@@ -228,22 +228,27 @@ public class MainMenuManager : MonoBehaviour
         {
             button.image.color = Color.yellow;
             if (button.name == "hardness") button.GetComponentInChildren<TextMeshProUGUI>().text = "NORMAL";
-            else button.GetComponentInChildren<TextMeshProUGUI>().text = "9x9";
+            else button.GetComponentInChildren<TextMeshProUGUI>().text = "8x8";
                 
         }
         else if (value == 2)
         {
             button.image.color = Color.red;
             if (button.name == "hardness") button.GetComponentInChildren<TextMeshProUGUI>().text = "HARD";
-            else button.GetComponentInChildren<TextMeshProUGUI>().text = "10x10";
+            else button.GetComponentInChildren<TextMeshProUGUI>().text = "9x9";
                 
         }
         else
         {
             button.image.color = Color.green;
             if(button.name=="hardness") button.GetComponentInChildren<TextMeshProUGUI>().text = "EASY";
-            else button.GetComponentInChildren<TextMeshProUGUI>().text = "8x8";
+            else button.GetComponentInChildren<TextMeshProUGUI>().text = "7x7";
             
         }
+    }
+    public void PlayCustomMode()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+        SceneManager.LoadScene(3);
     }
 }

@@ -19,9 +19,16 @@ public class GridManager : MonoBehaviour
     Color visualGridCellsColor;
     int firstSortingOrder=0;
     int lastSortingOrder=5;   
+    CustomGameManager cGameManager;
 
     private void Awake()
     {
+        cGameManager = FindFirstObjectByType<CustomGameManager>();
+        if (cGameManager!=null)
+        {
+            width = height = cGameManager.size;
+            initialFillPercentage = cGameManager.difficulty * 0.25f;
+        }
         logicGrid = new Transform[width, height];
         visualGridCells = new SpriteRenderer[width, height];
         
@@ -388,6 +395,5 @@ public class GridManager : MonoBehaviour
                 cellsFilled += randomBlockData.cells.Count;
             }
         }
-        Debug.Log($"{cellsFilled} hücre baþlangýçta dolduruldu.");
     }
 }
