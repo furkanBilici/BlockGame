@@ -11,13 +11,17 @@ public class TimeManager : MonoBehaviour
     public GameObject startScreen;
     public GameObject winScreen;
     public TextMeshProUGUI startText;
+    public TextMeshProUGUI goalText;
 
     private void Start()
     {
+        point = PlayerPrefs.GetInt("TimedGameScore", 20);
+        startTime = PlayerPrefs.GetFloat("TimedGameTime", 20);
         startText.text = point+" POINTS";
         timeSecond=startTime;
         time.text = "REMAINED: " + timeSecond+" S";
         StartCoroutine(StartAnim());
+        goalText.text = "GOAL:" + point;
     }
 
     private void FixedUpdate()

@@ -61,7 +61,7 @@ public class MainMenuManager : MonoBehaviour
     public void StartGame()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
     public void QuitGame()//oyundan çýkýþ butonu (2 butonda kullanýlacak)
     {
@@ -159,12 +159,32 @@ public class MainMenuManager : MonoBehaviour
             modePanel.SetActive(true);
         }
     }
-    public void StartTimedGame()
+    [Header("TimedMode")]
+    [SerializeField] float time = 25f;
+    [SerializeField] int neededScore = 20;
+    [SerializeField] GameObject timedPanel;
+
+    public void TimedPanelController()
+    {
+        if (timedPanel.activeSelf)
+        {
+            timedPanel.SetActive(false);
+        }
+        else
+        {
+            timedPanel.SetActive(true);
+        }
+    }
+    public void StartTimedGame(int level)
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        SceneManager.LoadScene(2);
+        PlayerPrefs.SetInt("TimedGameScore", neededScore * level*level);
+        PlayerPrefs.SetFloat("TimedGameTime", time * level);
+        SceneManager.LoadScene(3);
     }
-
+    [Header("CustomMode")]
+    [SerializeField] int boardScale = 0;//0=8x8,1=9x9,2=10x10
+    [SerializeField] int difficulty = 0;//0=easy, 1 normal, 2=hard
     public void CustomModePanel()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
@@ -180,8 +200,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    [SerializeField] int boardScale = 0;//0=8x8,1=9x9,2=10x10
-    [SerializeField] int difficulty = 0;//0=easy, 1 normal, 2=hard
+    
     public void BoardScale()
     {
         if(boardScale >= 2)
@@ -256,8 +275,10 @@ public class MainMenuManager : MonoBehaviour
     public void PlayCustomMode()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(4);
     }
+
+
 
 
 
