@@ -47,22 +47,8 @@ public class LootLockerManager : MonoBehaviour
         }
         else
         {
-            LootLockerSDKManager.GetPlayerName((response) =>
-            {
-                if (response.success && !string.IsNullOrEmpty(response.name))
-                {
-                    playerName = response.name;
-                    StartCoroutine(SubmitScoreRoutine(playerName, scoreToSubmit));
-                }
-                else
-                {
-                    string guestName = "Player" + Random.Range(1000, 9999);
-                    SetPlayerName(guestName, () =>
-                    {
-                        StartCoroutine(SubmitScoreRoutine(guestName, scoreToSubmit));
-                    });
-                }
-            });
+            Debug.Log("oyuncu yok");
+            return;
         }
     }
     private System.Collections.IEnumerator SubmitScoreRoutine(string playerName, int scoreToSubmit)
@@ -98,6 +84,31 @@ public class LootLockerManager : MonoBehaviour
                 Debug.LogError("isim eklenemedi ");
             }
             onComplete?.Invoke(); 
+        });
+    }
+
+    public void CheckIfPlayerExists(string nameToCheck, System.Action<bool> onComplete)
+    {
+        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 1000, 0, (response) =>
+        {
+            if (response.success)
+            {
+                bool nameFound = false;
+                foreach (var member in response.items)
+                {
+                    if (string.Equals(member.player.name, nameToCheck, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        nameFound = true;
+                        break;
+                    }
+                }
+                onComplete?.Invoke(nameFound);
+            }
+            else
+            {
+                Debug.LogError("Liderlik tablosu çekilirken hata: " + response.text);
+                onComplete?.Invoke(true);
+            }
         });
     }
 }

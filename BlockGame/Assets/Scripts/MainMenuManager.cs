@@ -54,7 +54,9 @@ public class MainMenuManager : MonoBehaviour
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
-       if(LootLockerManager.Instance!=null) CheckForPlayerName();
+        if(LootLockerManager.Instance!=null) CheckForPlayerName();
+        ScoreChecker();
+        
     }
     public void StartGame()
     {
@@ -315,10 +317,12 @@ public class MainMenuManager : MonoBehaviour
     public TMP_InputField nameField;
     private const string PLAYER_NAME_KEY = "PlayerName";
     public TextMeshProUGUI errorText;
+    public TextMeshProUGUI statusText;
+    public Button confirmNameButton;
     void CheckForPlayerName()
     {
         string playerName=PlayerPrefs.GetString(PLAYER_NAME_KEY);
-        if (String.IsNullOrEmpty(playerName ))
+        if (String.IsNullOrEmpty(playerName ) && Application.internetReachability!=NetworkReachability.NotReachable)
         {
             setNamePanel.SetActive(true);
         }
@@ -333,38 +337,46 @@ public class MainMenuManager : MonoBehaviour
             Debug.Log("bu isim olmaz");
             return;
         }
-        if (LootLockerManager.Instance != null && Application.internetReachability!=NetworkReachability.NotReachable)
-        {
-            LootLockerManager.Instance.SetPlayerName(playerName);
-        }
-        else
-        {
-            PlayerPrefs.SetString("PlayerName", playerName);
-            PlayerPrefs.Save();
-        }
-        Debug.Log("Oyuncu adý kaydedildi: " + playerName);
 
-        setNamePanel.SetActive(false);
+        confirmNameButton.interactable = false;
+        statusText.color = Color.white;
+        statusText.text = "Checking...";
+
+        LootLockerManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+        {
+            confirmNameButton.interactable = true;
+            if (nameExists) 
+            {
+                statusText.text = "This username is used by another player";
+                statusText.color = Color.red;
+            }
+            else 
+            {
+                statusText.text = "Name saved!"; 
+                LootLockerManager.Instance.SetPlayerName(playerName);
+                setNamePanel.SetActive(false);
+            }
+        });
     }
     System.Collections.IEnumerator ShowErrorText()
     {
-        float alpha = 0;
-        float targetAlpha = 1;
+        errorText.text = "Username must be longer than 3 characters!";
         float timer = 0f;
-        float duration = 0.2f;
+        float duration = 1f;
         while (timer < duration)
         {
             timer+= Time.deltaTime;
             errorText.GetComponent<CanvasGroup>().alpha = 1;
             yield return null;
         }
-        timer = 0f;
-        while (timer < duration)
+        errorText.GetComponent<CanvasGroup>().alpha = 0;
+    }
+    void ScoreChecker()
+    {
+        int highScore = PlayerPrefs.GetInt("HighestScore",-1);
+        if (Application.internetReachability != NetworkReachability.NotReachable && highScore!=-1)
         {
-            timer += Time.deltaTime;
-            errorText.GetComponent<CanvasGroup>().alpha += Mathf.Lerp(targetAlpha, alpha, timer / duration);
-            yield return null;
+            if (LootLockerManager.Instance != null) LootLockerManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
         }
     }
-
 }
