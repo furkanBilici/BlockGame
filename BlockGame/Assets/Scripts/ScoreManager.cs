@@ -95,6 +95,10 @@ public class ScoreManager : MonoBehaviour
             if(UIManager.Instance.GameType==0) PlayerPrefs.SetInt("HighestScore",highestScore);
             PlayerPrefs.Save(); 
         }
+        if(Application.internetReachability!= NetworkReachability.NotReachable)
+        {
+            if (LootLockerManager.Instance != null) LootLockerManager.Instance.SubmitScore(highestScore);
+        }
     }
     public int GetCurrentScore()
     {

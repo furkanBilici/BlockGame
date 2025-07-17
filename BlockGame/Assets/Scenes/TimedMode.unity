@@ -8941,7 +8941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2798329583e9a844a3ff951d94ac2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  point: 10
+  point: 50
   startTime: 30
   time: {fileID: 1882941119}
   startScreen: {fileID: 524526676}

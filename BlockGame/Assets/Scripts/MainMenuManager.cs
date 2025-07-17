@@ -1,7 +1,11 @@
+using LootLocker.Requests;
+using System;
 using TMPro;
 using Unity.VisualScripting;
+//using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -50,6 +54,7 @@ public class MainMenuManager : MonoBehaviour
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
+       if(LootLockerManager.Instance!=null) CheckForPlayerName();
     }
     public void StartGame()
     {
@@ -251,4 +256,115 @@ public class MainMenuManager : MonoBehaviour
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         SceneManager.LoadScene(3);
     }
+
+
+
+    [Header("HighScoreBoard")]
+    public GameObject HighscoreBoardPanel;
+    public Transform scoreContentParent;
+    public GameObject scoreEntryPrefab;
+    public GameObject noConnectionPanel;
+
+    private const string LEADERBOARD_KEY = "global_high_scores";
+    public void ShowHighScoreBoardPanel()
+    {
+        if (HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf)
+        {
+            HighscoreBoardPanel.SetActive(false);
+            noConnectionPanel.SetActive(false);
+            return;
+        }
+        
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Debug.Log("internet yok");
+            noConnectionPanel.SetActive(true);
+            return;
+        }
+        HighscoreBoardPanel.SetActive(true);
+
+        foreach(Transform child in scoreContentParent.transform) Destroy(child.gameObject);
+
+        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 10, (response) =>
+        {
+            if (response.success)
+            {
+                LootLockerLeaderboardMember[] scores = response.items;
+                for(int i = 0; i < scores.Length; i++)
+                {
+                    GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
+                    TextMeshProUGUI rankText=entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
+                    TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
+                    TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+                    rankText.text = scores[i].rank + ".";
+                    nameText.text = scores[i].player.name;
+                    scoreText.text = scores[i].score.ToString();
+
+                }
+            }
+            else
+            {
+                Debug.Log("liste getirilemedi");
+            }
+        });
+
+    }
+
+    [Header("Player Name")]
+    public GameObject setNamePanel;
+    public TMP_InputField nameField;
+    private const string PLAYER_NAME_KEY = "PlayerName";
+    public TextMeshProUGUI errorText;
+    void CheckForPlayerName()
+    {
+        string playerName=PlayerPrefs.GetString(PLAYER_NAME_KEY);
+        if (String.IsNullOrEmpty(playerName ))
+        {
+            setNamePanel.SetActive(true);
+        }
+    }
+    public void ConfirmPlayerName() 
+    {
+        string playerName = nameField.text;
+
+        if (string.IsNullOrWhiteSpace(playerName) || playerName.Length < 3)
+        {
+            StartCoroutine(ShowErrorText());
+            Debug.Log("bu isim olmaz");
+            return;
+        }
+        if (LootLockerManager.Instance != null && Application.internetReachability!=NetworkReachability.NotReachable)
+        {
+            LootLockerManager.Instance.SetPlayerName(playerName);
+        }
+        else
+        {
+            PlayerPrefs.SetString("PlayerName", playerName);
+            PlayerPrefs.Save();
+        }
+        Debug.Log("Oyuncu adý kaydedildi: " + playerName);
+
+        setNamePanel.SetActive(false);
+    }
+    System.Collections.IEnumerator ShowErrorText()
+    {
+        float alpha = 0;
+        float targetAlpha = 1;
+        float timer = 0f;
+        float duration = 0.2f;
+        while (timer < duration)
+        {
+            timer+= Time.deltaTime;
+            errorText.GetComponent<CanvasGroup>().alpha = 1;
+            yield return null;
+        }
+        timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            errorText.GetComponent<CanvasGroup>().alpha += Mathf.Lerp(targetAlpha, alpha, timer / duration);
+            yield return null;
+        }
+    }
+
 }

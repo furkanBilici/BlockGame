@@ -72,8 +72,8 @@ public class AudioManager : MonoBehaviour
             s.source.playOnAwake = false;
             s.source.loop = s.loop;
         }
-        _closeMusics = PlayerPrefs.GetInt("MusicClosed",0)==0;
-        _closeSounds = PlayerPrefs.GetInt("SoundClosed",0)==0;
+        _closeMusics = PlayerPrefs.GetInt("MusicClosed",1)==0;
+        _closeSounds = PlayerPrefs.GetInt("SoundClosed",1)==0;
     }
     public void PlayMusic(string name)
     {

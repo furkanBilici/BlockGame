@@ -17,6 +17,7 @@ public class BlockDragger : MonoBehaviour
     private const int DRAGGING_SORTING_ORDER = 10;
     private const int PLACED_SORTING_ORDER = 0;
 
+    Vector3 offsetForBlock=new Vector3(0,3.5f,0);
     
 
     private void Awake()
@@ -35,7 +36,7 @@ public class BlockDragger : MonoBehaviour
         GhostBlockCreator();
         
         initialPosition = blockParent.position;
-        offset = blockParent.position - GetMouseWorldPosition();
+        offset = blockParent.position - GetMouseWorldPosition() +offsetForBlock;
         SetSortingOrderOfChildren(DRAGGING_SORTING_ORDER);
     }
 
