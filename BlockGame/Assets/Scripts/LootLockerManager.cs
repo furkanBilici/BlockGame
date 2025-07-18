@@ -94,6 +94,7 @@ public class LootLockerManager : MonoBehaviour
             if (response.success)
             {
                 bool nameFound = false;
+                if(response.items!=null)
                 foreach (var member in response.items)
                 {
                     if (string.Equals(member.player.name, nameToCheck, System.StringComparison.OrdinalIgnoreCase))

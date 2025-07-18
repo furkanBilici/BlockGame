@@ -89,7 +89,7 @@ public class ScoreManager : MonoBehaviour
     }
     public void CheckHighestScore()
     {
-        if (highestScore < currentScore)
+        if (highestScore <= currentScore)
         {
             highestScore = currentScore;    
             if(UIManager.Instance.GameType==0) PlayerPrefs.SetInt("HighestScore",highestScore);
@@ -97,7 +97,7 @@ public class ScoreManager : MonoBehaviour
         }
         if(Application.internetReachability!= NetworkReachability.NotReachable)
         {
-            if (LootLockerManager.Instance != null) LootLockerManager.Instance.SubmitScore(highestScore);
+            if (LootLockerManager.Instance != null && UIManager.Instance.GameType==0) LootLockerManager.Instance.SubmitScore(highestScore);
         }
     }
     public int GetCurrentScore()

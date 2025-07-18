@@ -12,9 +12,11 @@ public class TimeManager : MonoBehaviour
     public GameObject winScreen;
     public TextMeshProUGUI startText;
     public TextMeshProUGUI goalText;
+    public int completedLevels=0;
 
     private void Start()
     {
+        completedLevels = PlayerPrefs.GetInt("CompletedLevels", 0);
         point = PlayerPrefs.GetInt("TimedGameScore", 20);
         startTime = PlayerPrefs.GetFloat("TimedGameTime", 20);
         startText.text = point+" POINTS";
@@ -52,6 +54,13 @@ public class TimeManager : MonoBehaviour
                 AudioManager.Instance.PlaySFX("WinSound");
                 AudioManager.Instance.StopAllMusic();
             }
+            if (completedLevels <= 3 && !winScreen.activeSelf) 
+            {
+                completedLevels++;
+                PlayerPrefs.SetInt("CompletedLevels", completedLevels);
+                PlayerPrefs.Save();
+            }
+            
             winScreen.SetActive(true);
             UIManager.Instance.panelActive = true;  
         }

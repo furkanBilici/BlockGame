@@ -163,6 +163,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] float time = 25f;
     [SerializeField] int neededScore = 20;
     [SerializeField] GameObject timedPanel;
+    public Button levelOne;
+    public Button levelTwo;
+    public Button levelThree;
 
     public void TimedPanelController()
     {
@@ -173,6 +176,32 @@ public class MainMenuManager : MonoBehaviour
         else
         {
             timedPanel.SetActive(true);
+            if (PlayerPrefs.GetInt("CompletedLevels",0) == 0)
+            {
+                levelOne.image.color=Color.yellow;
+                levelTwo.image.color = Color.red;
+                levelTwo.interactable = false;
+                levelThree.image.color=Color.red;
+                levelThree.interactable = false;
+            }
+            else if (PlayerPrefs.GetInt("CompletedLevels") == 1)
+            {
+                levelOne.image.color = Color.green;
+                levelTwo.image.color = Color.yellow;
+                levelTwo.interactable = true;
+                levelThree.image.color = Color.red;
+                levelThree.interactable = false;
+            }
+            else if (PlayerPrefs.GetInt("CompletedLevels") == 2)
+            {
+                levelTwo.image.color = Color.green;
+                levelThree.image.color = Color.yellow;
+                levelThree.interactable = true;
+            }
+            else
+            {
+                levelThree.image.color = Color.green;
+            }
         }
     }
     public void StartTimedGame(int level)
@@ -340,12 +369,17 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI errorText;
     public TextMeshProUGUI statusText;
     public Button confirmNameButton;
+    public TextMeshProUGUI welcomText;
     void CheckForPlayerName()
     {
         string playerName=PlayerPrefs.GetString(PLAYER_NAME_KEY);
         if (String.IsNullOrEmpty(playerName ) && Application.internetReachability!=NetworkReachability.NotReachable)
         {
             setNamePanel.SetActive(true);
+        }
+        if(!String.IsNullOrEmpty(playerName))
+        {
+            welcomText.text ="WELCOME: "+ playerName;
         }
     }
     public void ConfirmPlayerName() 
@@ -376,6 +410,7 @@ public class MainMenuManager : MonoBehaviour
                 statusText.text = "Name saved!"; 
                 LootLockerManager.Instance.SetPlayerName(playerName);
                 setNamePanel.SetActive(false);
+                welcomText.text = "WELCOME: " + playerName;
             }
         });
     }
