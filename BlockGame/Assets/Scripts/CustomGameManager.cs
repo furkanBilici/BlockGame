@@ -6,6 +6,7 @@ public class CustomGameManager : MonoBehaviour
     public int difficulty;
     private void Awake()
     {
+        
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         size= PlayerPrefs.GetInt("boardScale", 0) + 7;
         if (size == 7)
@@ -16,5 +17,10 @@ public class CustomGameManager : MonoBehaviour
         {
             transform.position = new Vector2(transform.position.x + 0.5f, transform.position.y + 0.5f);
         }
+    }
+    private void Start()
+    {
+        UIManager.Instance.GameType = 2;
+        if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
     }
 }

@@ -164,6 +164,26 @@ public class BlockSpawner : MonoBehaviour
         int randomIndex = Random.Range(0, allBlockData.Count);
         return allBlockData[randomIndex];
     }
-    
 
+    void OnEnable()
+    {
+        AdsManager.OnRewardEarned += ContinueGameAfterAd;//script açýldýðýnda bunu kontrol etmeli
+    }
+
+    void OnDisable()
+    {
+            AdsManager.OnRewardEarned -= ContinueGameAfterAd;//script kapatýldýðýnda dinlemeye devam etmesin, performans için
+    }
+
+    private void ContinueGameAfterAd()
+    {
+        Debug.Log("Reklam ödülü alýnýyor: Oyuna devam ediliyor.");
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.HideGameOverPanel();
+        }
+
+        SpawnNewBlockSet();
+    }
 }

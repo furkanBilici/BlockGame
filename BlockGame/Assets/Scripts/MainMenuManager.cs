@@ -42,6 +42,7 @@ public class MainMenuManager : MonoBehaviour
     }
     private void Start()
     {
+        if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
         if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
         if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("MenuMusic");
         modePanelBool = modePanel.activeSelf;

@@ -1,4 +1,5 @@
 
+using GoogleMobileAds.Api.AdManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -49,7 +50,13 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) 
         {
             StopGame();
-        }  
+        }
+        if (watchAdButton != null && watchAdButton.gameObject.activeInHierarchy)
+        {
+            // Butonun týklanabilirliðini, reklamýn yüklenip yüklenmediðine göre ayarla.
+            // Bu, oyuncunun hazýr olmayan bir reklama basmasýný engeller.
+            watchAdButton.interactable = AdsManager.Instance.IsRewardedAdLoaded;
+        }
     }
     public void ShowGameOverPanel()
     {
@@ -72,6 +79,10 @@ public class UIManager : MonoBehaviour
             scoreText.SetActive(false);
         }        
         if(highScore!=null) highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+        if (watchAdButton != null && AdsManager.Instance!=null)
+        {
+            watchAdButton.gameObject.SetActive(true);
+        }
     }
 
     public void RestartGame()
@@ -82,7 +93,12 @@ public class UIManager : MonoBehaviour
     }
     public void MainMenu()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("OutGame");
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("OutGame");
+            AudioManager.Instance.StopAllMusic();
+        }
+
         panelActive = false;
         SceneManager.LoadScene(0);
     }
@@ -108,5 +124,30 @@ public class UIManager : MonoBehaviour
         panelActive = false;
         panel.SetActive(false);
         continueButton.SetActive(false);
+    }
+
+    [Header("Reklam Butonu")]
+    [SerializeField] private Button watchAdButton;
+
+    public void HideGameOverPanel()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("CustomGameMusic");
+        panelActive=false;
+        panel.SetActive(false);
+        gameoverText.SetActive(false);
+        scoreTextEnd.SetActive(false);
+        scoreText.SetActive(true);
+        if (watchAdButton != null && AdsManager.Instance != null)
+        {
+            watchAdButton.gameObject.SetActive(false);
+        }
+    }
+    public void OnWatchAdButtonClicked()
+    {
+        // Butonu geçici olarak pasif yap ki tekrar tekrar basýlmasýn.
+        watchAdButton.interactable = false;
+
+        // Reklamý göstermesi için AdsManager'ý çaðýr.
+        AdsManager.Instance.ShowRewardedAd();
     }
 }

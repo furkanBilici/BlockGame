@@ -16,6 +16,7 @@ public class TimeManager : MonoBehaviour
 
     private void Start()
     {
+        UIManager.Instance.GameType = 1;
         completedLevels = PlayerPrefs.GetInt("CompletedLevels", 0);
         point = PlayerPrefs.GetInt("TimedGameScore", 20);
         startTime = PlayerPrefs.GetFloat("TimedGameTime", 20);
@@ -24,6 +25,7 @@ public class TimeManager : MonoBehaviour
         time.text = "REMAINED: " + timeSecond+" S";
         StartCoroutine(StartAnim());
         goalText.text = "GOAL:" + point;
+        if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
     }
 
     private void FixedUpdate()
