@@ -89,6 +89,16 @@ public class BlockSpawner : MonoBehaviour
         int random=Random.Range(0,colors.Length);
         return colors[random];
     }
+
+    [Header("Materials")]
+    public Material[] materials;
+    Material randomMaterial;
+    
+    Material GetRandomMaterial()
+    {
+        int random = Random.Range(0, materials.Length);
+        return materials[random];
+    }
     private void SpawnBlock(BlockData data, Vector2 position)
     {
         if (data == null) return;
@@ -101,12 +111,12 @@ public class BlockSpawner : MonoBehaviour
         activeBlocks.Add(blockObject);
 
         // Renklendirme mantýðýný koruyoruz
-        randomColor = GetRandomColor();
+        randomMaterial = GetRandomMaterial();
         foreach (Vector2Int cellPos in data.cells)
         {
             GameObject cell = Instantiate(data.blockCellPrefab, blockObject.transform);
             cell.transform.localPosition = (Vector2)cellPos;
-            cell.GetComponent<SpriteRenderer>().color = randomColor;
+            cell.GetComponent<Renderer>().material = randomMaterial;
         }
     }
 

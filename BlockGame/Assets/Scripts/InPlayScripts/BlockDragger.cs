@@ -13,18 +13,25 @@ public class BlockDragger : MonoBehaviour
     public bool isPlaced = false;
     private bool isDragging = false;
 
+    private int dragPlaneLayerMask;
+    private GameObject ghostBlock;
+
     // Sabitler daha okunaklý yapar
     private const int DRAGGING_SORTING_ORDER = 10;
     private const int PLACED_SORTING_ORDER = 0;
 
-    Vector3 offsetForBlock=new Vector3(0,3.5f,0);
-    
+    Vector3 offsetForBlock=new Vector3(0,3f,0f);
+    Vector3 offsetForZ = new Vector3(0, 0,-0.5f);
+    private float ghostBlockVisuality = 0.5f;
+    [SerializeField] Material ghostBlockMaterial;
+    Material blockMaterial;
 
     private void Awake()
     {
         mainCamera = Camera.main;
         blockParent = transform.parent;
         gridManager = FindFirstObjectByType<GridManager>();
+        dragPlaneLayerMask = LayerMask.GetMask("DragPlane");
     }
 
     void OnMouseDown()
@@ -32,18 +39,26 @@ public class BlockDragger : MonoBehaviour
         if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
         isDragging = true;
+        blockMaterial = blockParent.GetComponentInChildren<Renderer>().material;
 
         GhostBlockCreator();
-        
+        Vector3? hitPoint = GetMouseWorldPositionOnPlane();
         initialPosition = blockParent.position;
-        offset = blockParent.position - GetMouseWorldPosition() +offsetForBlock;
-        SetSortingOrderOfChildren(DRAGGING_SORTING_ORDER);
+        if (hitPoint.HasValue)
+        {
+            offset = blockParent.position - (hitPoint.Value + offsetForBlock);
+        }
     }
 
     void OnMouseDrag()
     {
         if (!isDragging || UIManager.Instance.panelActive) return;
-        blockParent.position = GetMouseWorldPosition() + offset;
+
+        Vector3? hitPoint = GetMouseWorldPositionOnPlane();
+        if (hitPoint.HasValue)
+        {
+            blockParent.position = hitPoint.Value + offsetForBlock + offset+ offsetForZ;
+        }
         ShowGhost();   
     }
 
@@ -60,13 +75,14 @@ public class BlockDragger : MonoBehaviour
 
         if (gridManager.CanPlaceBlock(block.data, gridPos))
         {
-            // YERLEÞTÝRME BAÞARILI
-            blockParent.position = (Vector2)gridPos;
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
 
-            // 1. ÖNCE bloðu aktif listeden silmesi için Spawner'a haber ver.
+            // Yerleþtirme baþarýlý
+            Vector3 finalPos = new Vector3(gridPos.x, gridPos.y, 0); // Z pozisyonunu sýfýrla
+            blockParent.position = finalPos;
+
             BlockSpawner.Instance.RemoveFromActiveBlocks(blockParent.gameObject);
-
-            // 2. SONRA bloðu yerleþtirmesi ve süreci devam ettirmesi için GridManager'ý tetikle.
+            if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnBlockPlaced();
             gridManager.PlaceBlock(blockParent.gameObject, gridPos);
 
             block.AnimationPlacement();
@@ -85,7 +101,7 @@ public class BlockDragger : MonoBehaviour
         {
             dragger.isPlaced = true;
         }
-        SetSortingOrderOfChildren(PLACED_SORTING_ORDER);
+        
     }
 
     private void ReturnToInitialPosition()
@@ -93,46 +109,39 @@ public class BlockDragger : MonoBehaviour
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CannotPutBlock");
         blockParent.position = initialPosition;
         gridManager.ResetGridColors();
-        SetSortingOrderOfChildren(PLACED_SORTING_ORDER);
     }
-
-    private void SetSortingOrderOfChildren(int order)
+    private Vector3? GetMouseWorldPositionOnPlane()
     {
-        foreach (var renderer in blockParent.GetComponentsInChildren<SpriteRenderer>())
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, dragPlaneLayerMask))
         {
-            renderer.sortingOrder = order;
+           
+            return hitInfo.point;
         }
+        return null;
     }
 
-    // Düzeltilmiþ fonksiyon
-    private Vector3 GetMouseWorldPosition()
-    {
-        Vector3 mousePoint = Input.mousePosition;
-        mousePoint.z = -mainCamera.transform.position.z;
-        return mainCamera.ScreenToWorldPoint(mousePoint);
-    }
 
-    private GameObject ghostBlock;
-    float ghostBlockVisuality = 0.6f;
+
     private void ShowGhost()
     {
-        Block block=blockParent.GetComponent<Block>();
+        if (ghostBlock == null) return;
+
+        Block block = blockParent.GetComponent<Block>();
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
+
         if (gridManager.CanPlaceBlock(block.data, gridPos))
         {
-            ghostBlock.transform.position = new Vector2(gridPos.x,gridPos.y);
+            ghostBlock.transform.position = new Vector3(gridPos.x, gridPos.y, 0); // Z pozisyonu 0'da
             ghostBlock.SetActive(true);
-            // 1. bu hamlenin hangi hatlarý tamamlayacaðýný simüle et
-            var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
 
-            // 2. eðer tamamlanacak hat varsa, onlarý hayalet blok renginde vurgula
+            var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
             if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
             {
-                // Hayalet bloðun rengini al (ilk hücresinden).
-                Color ghostColor = ghostBlock.GetComponentInChildren<SpriteRenderer>().color;
-                gridManager.HighlightLines(completedLines.rows, completedLines.cols, ghostColor);
+               
+                gridManager.HighlightLines(completedLines.rows, completedLines.cols, blockMaterial);
             }
-            else // eðer tamamlanacak hat yoksa, tüm renkleri sýfýrla.
+            else
             {
                 gridManager.ResetGridColors();
             }
@@ -140,7 +149,6 @@ public class BlockDragger : MonoBehaviour
         else
         {
             ghostBlock.SetActive(false);
-            // Geçersiz bir hamle ise de renkleri sýfýrla.
             gridManager.ResetGridColors();
         }
     }
@@ -148,16 +156,20 @@ public class BlockDragger : MonoBehaviour
     void GhostBlockCreator()
     {
         ghostBlock = Instantiate(blockParent.gameObject);
+        ghostBlock.name = "GhostBlock";
 
-        foreach (SpriteRenderer sr in ghostBlock.GetComponentsInChildren(typeof(SpriteRenderer))) 
+        // Hayaletin sürüklenememesi için üzerindeki tüm BlockDragger'larý kaldýr.
+        foreach (var dragger in ghostBlock.GetComponentsInChildren<BlockDragger>())
         {
-            Color color = sr.color;
-            color.a = ghostBlockVisuality;
-            sr.color = color;
+            Destroy(dragger);
+        }
+
+        // 3D objeler için SpriteRenderer deðil, Renderer'ý hedef almalýyýz.
+        foreach (Renderer renderer in ghostBlock.GetComponentsInChildren<Renderer>())
+        {
+            renderer.material = ghostBlockMaterial;
         }
 
         ghostBlock.SetActive(false);
     }
-
-
 }

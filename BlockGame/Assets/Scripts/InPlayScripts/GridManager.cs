@@ -15,29 +15,27 @@ public class GridManager : MonoBehaviour
     private Transform[,] logicGrid;
     private bool isClearing = false;
 
-    private SpriteRenderer[,] visualGridCells;
-    Color visualGridCellsColor;
-    int firstSortingOrder=0;
-    int lastSortingOrder=5;   
+    private Renderer[,] visualGridCells;
     CustomGameManager cGameManager;
+    Material initialGridMaterial;
+
+
 
     private void Awake()
     {
         cGameManager = FindFirstObjectByType<CustomGameManager>();
         if (cGameManager!=null)
         {
-            width = height = cGameManager.size;
-            initialFillPercentage = cGameManager.difficulty * 0.25f;
+            width = height = cGameManager.size; 
         }
         logicGrid = new Transform[width, height];
-        visualGridCells = new SpriteRenderer[width, height];
+        visualGridCells = new Renderer[width, height];
         
     }
 
     void Start()
     {
-        GenerateGrid();
-        GenerateInitialBlocks();
+        GenerateGrid(); 
     }
 
     void GenerateGrid()
@@ -58,11 +56,8 @@ public class GridManager : MonoBehaviour
                 
             }
         }
-        visualGridCellsColor = visualGridCells[0, 0].color;
-        firstSortingOrder=visualGridCells[0, 0].sortingOrder;   
+        if (visualGridCells[0, 0] != null) initialGridMaterial = visualGridCells[0, 0].material;
     }
-
-    Color placedBlockColor;
 
     public void PlaceBlock(GameObject blockObject, Vector2Int gridPosition)
     {
@@ -79,8 +74,7 @@ public class GridManager : MonoBehaviour
                     break;
                 }
             }
-        }
-        placedBlockColor=blockObject.GetComponentInChildren<SpriteRenderer>().color;  
+        } 
         blockObject.transform.parent = this.transform;
 
         bool linesWereCleared = CheckForCompletedLines();
@@ -149,14 +143,27 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
+        foreach (int y in rows)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (logicGrid[x, y] != null)
+                {
+                    if (logicGrid[x, y].name == "SurpriseBox")
+                    {
+                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
+                    }
+                    if (!cellsToClear.Contains(logicGrid[x, y])) cellsToClear.Add(logicGrid[x, y]);
+                }
+            }
+        }
         // Animasyonu uygula
         if (cellsToClear.Count > 0)
         {
             // Önce hepsini parlatalým
             foreach (Transform cell in cellsToClear)
             {
-                if (cell != null) cell.GetComponent<SpriteRenderer>().color = placedBlockColor;
+                if (cell != null) cell.GetComponent<Renderer>().material = initialGridMaterial;
             }
 
             yield return new WaitForSeconds(duration / 2);
@@ -236,32 +243,31 @@ public class GridManager : MonoBehaviour
         }
         return false;
     }
-    
 
-    public void HighlightLines(List<int> rows, List<int> cols, Color highlightColor)
+
+    public void HighlightLines(List<int> rows, List<int> cols, Material highlightMaterial)
     {
         // Önce tüm grid'i normale döndür
         ResetGridColors();
-
+        
         if (rows != null)
-        {
+        {Debug.Log("parlamalý");
             foreach (int y in rows)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    visualGridCells[x, y].color = highlightColor;
-                    visualGridCells[x, y].sortingOrder = lastSortingOrder;
+                    visualGridCells[x, y].material = highlightMaterial;
                 }
             }
         }
         if (cols != null)
         {
+            Debug.Log("parlamalý");
             foreach (int x in cols)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    visualGridCells[x, y].color = highlightColor;
-                    visualGridCells[x, y].sortingOrder = lastSortingOrder;
+                    visualGridCells[x, y].material = highlightMaterial;
                 }
             }
         }
@@ -273,8 +279,7 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                visualGridCells[x, y].color = visualGridCellsColor; // Veya baþlangýç rengin neyse o.
-                visualGridCells[x,y].sortingOrder = firstSortingOrder;
+                visualGridCells[x, y].material = initialGridMaterial; // Veya baþlangýç rengin neyse o.
             }
         }
     }
@@ -337,16 +342,38 @@ public class GridManager : MonoBehaviour
         return (completedRows, completedCols);
     }
 
-        [Header("Baþlangýç Bloklarý Ayarlarý")]
+    public Vector2Int? GetRandomEmptyCell()
+    {
+        List<Vector2Int> emptyCells = new List<Vector2Int>();
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (logicGrid[x, y] == null) emptyCells.Add(new Vector2Int(x, y));
+            }
+        }
+        if (emptyCells.Count == 0) return null;
+        return emptyCells[Random.Range(0, emptyCells.Count)];
+    }
+
+    public void OccupyCell(Vector2Int position, Transform obj)
+    {
+        if (IsWithinGrid(position.x, position.y))
+        {
+            logicGrid[position.x, position.y] = obj;
+        }
+    }
+
+    [Header("Baþlangýç Bloklarý Ayarlarý")]
     [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
     [Range(0f, 0.5f)]
-    [SerializeField] private float initialFillPercentage = 0.2f; // %20
-    [SerializeField] private int maxPlacementTries = 50; // sonsuz döngüyü önlemek için deneme sayýsý
+    [SerializeField] private float initialFillPercentages = 0.2f; // %20
+    [SerializeField] private int maxPlacementTriess = 50; // sonsuz döngüyü önlemek için deneme sayýsý
+    [SerializeField] private Material startBlocksMaterial;
 
-    private void GenerateInitialBlocks()
+    public void GenerateInitialBlocks(float initialFillPercentage, int maxPlacementTries)
     {
         if (initialFillPercentage <= 0) return;
-
         // Toplam hücre sayýsýna göre kaç hücre dolduracaðýmýzý hesapla
         int totalCells = width * height;
         int cellsToFill = Mathf.RoundToInt(totalCells * initialFillPercentage);
@@ -379,7 +406,7 @@ public class GridManager : MonoBehaviour
                     // Görsel hücreleri oluþtur
                     GameObject cell = Instantiate(randomBlockData.blockCellPrefab, blockObject.transform);
                     cell.transform.localPosition = (Vector2)cellPos;
-                    cell.GetComponent<SpriteRenderer>().color = Color.yellow;
+                    cell.GetComponent<Renderer>().material = startBlocksMaterial;
 
                     // Mantýksal grid'i güncelle
                     Vector2Int targetPos = randomPosition + cellPos;
