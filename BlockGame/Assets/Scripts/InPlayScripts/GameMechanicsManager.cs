@@ -34,6 +34,7 @@ public class GameMechanicsManager : MonoBehaviour
             countSuprizeBlock = 0;
         }
     }
+   
     void SpawnSurpriseBox()
     {
         if (gridManager == null) return;

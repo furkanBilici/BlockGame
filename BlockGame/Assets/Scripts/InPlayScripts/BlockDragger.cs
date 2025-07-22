@@ -22,7 +22,7 @@ public class BlockDragger : MonoBehaviour
 
     Vector3 offsetForBlock=new Vector3(0,3f,0f);
     Vector3 offsetForZ = new Vector3(0, 0,-0.5f);
-    private float ghostBlockVisuality = 0.5f;
+
     [SerializeField] Material ghostBlockMaterial;
     Material blockMaterial;
 
@@ -33,7 +33,6 @@ public class BlockDragger : MonoBehaviour
         gridManager = FindFirstObjectByType<GridManager>();
         dragPlaneLayerMask = LayerMask.GetMask("DragPlane");
     }
-
     void OnMouseDown()
     {
         if (isPlaced || UIManager.Instance.panelActive) return;
@@ -64,9 +63,7 @@ public class BlockDragger : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (!isDragging || UIManager.Instance.panelActive) return;
-
-        
+        if (!isDragging || UIManager.Instance.panelActive) return;        
         Destroy(ghostBlock);
         gridManager.ResetGridColors();
         isDragging = false;
@@ -76,7 +73,6 @@ public class BlockDragger : MonoBehaviour
         if (gridManager.CanPlaceBlock(block.data, gridPos))
         {
             if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
-
             // Yerleþtirme baþarýlý
             Vector3 finalPos = new Vector3(gridPos.x, gridPos.y, 0); // Z pozisyonunu sýfýrla
             blockParent.position = finalPos;
@@ -139,7 +135,7 @@ public class BlockDragger : MonoBehaviour
             if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
             {
                
-                gridManager.HighlightLines(completedLines.rows, completedLines.cols, blockMaterial);
+                gridManager.HighlightLines(completedLines.rows, completedLines.cols, blockMaterial.color);
             }
             else
             {

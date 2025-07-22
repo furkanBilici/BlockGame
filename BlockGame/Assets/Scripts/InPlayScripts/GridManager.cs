@@ -8,28 +8,25 @@ public class GridManager : MonoBehaviour
     [Header("Grid Ayarlarý")]
     [SerializeField] private int width = 8;
     [SerializeField] private int height = 8;
-
-    [Header("Prefab")]
-    [SerializeField] private GameObject gridCellPrefab; // Ýsmi düzeltildi
+    [SerializeField] private GameObject gridCellPrefab;
 
     private Transform[,] logicGrid;
     private bool isClearing = false;
 
-    private Renderer[,] visualGridCells;
+    //private Renderer[,] visualGridCells;
     CustomGameManager cGameManager;
-    Material initialGridMaterial;
-
-
-
+    Color initialGridColor;
+    private MaterialPropertyBlock mpb;
     private void Awake()
-    {
+    { 
+        initialGridColor=startBlocksMaterial.color;
         cGameManager = FindFirstObjectByType<CustomGameManager>();
         if (cGameManager!=null)
         {
             width = height = cGameManager.size; 
         }
         logicGrid = new Transform[width, height];
-        visualGridCells = new Renderer[width, height];
+        //visualGridCells = new Renderer[width, height];
         
     }
 
@@ -52,11 +49,11 @@ public class GridManager : MonoBehaviour
             {
                 GameObject newCell = Instantiate(gridCellPrefab, new Vector3(x, y, 0), Quaternion.identity, this.transform);
                 newCell.name = $"Cell({x},{y})";
-                visualGridCells[x, y] = newCell.GetComponent<SpriteRenderer>();
+                //visualGridCells[x, y] = newCell.GetComponent<SpriteRenderer>();
                 
             }
         }
-        if (visualGridCells[0, 0] != null) initialGridMaterial = visualGridCells[0, 0].material;
+        //if (visualGridCells[0, 0] != null) initialGridColor = visualGridCells[0, 0].material.color;
     }
 
     public void PlaceBlock(GameObject blockObject, Vector2Int gridPosition)
@@ -76,8 +73,8 @@ public class GridManager : MonoBehaviour
             }
         } 
         blockObject.transform.parent = this.transform;
-
-        bool linesWereCleared = CheckForCompletedLines();
+        var completedLines=CheckForCompletedLines(true);
+        bool linesWereCleared = (completedLines.rows.Count > 0 || completedLines.cols.Count > 0);
 
         if (!linesWereCleared)
         {
@@ -85,13 +82,14 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool CheckForCompletedLines()
+    private (List<int> rows, List<int> cols) CheckForCompletedLines(bool executeClear, Transform[,] gridToUse = null)
     {
+        Transform[,] targetGrid = gridToUse ?? logicGrid;
         List<int> completedRows = new List<int>();
         for (int y = 0; y < height; y++)
         {
             bool rowIsComplete = true;
-            for (int x = 0; x < width; x++) { if (logicGrid[x, y] == null) { rowIsComplete = false; break; } }
+            for (int x = 0; x < width; x++) { if (targetGrid[x, y] == null) { rowIsComplete = false; break; } }
             if (rowIsComplete) { completedRows.Add(y); }
         }
 
@@ -99,30 +97,26 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < width; x++)
         {
             bool colIsComplete = true;
-            for (int y = 0; y < height; y++) { if (logicGrid[x, y] == null) { colIsComplete = false; break; } }
+            for (int y = 0; y < height; y++) { if (targetGrid[x, y] == null) { colIsComplete = false; break; } }
             if (colIsComplete) { completedCols.Add(x); }
         }
 
-        if (completedRows.Count > 0 || completedCols.Count > 0)
+        if (executeClear&&(completedRows.Count > 0 || completedCols.Count > 0))
         {
             int totalLines = completedRows.Count + completedCols.Count;
             if (ScoreManager.Instance != null) ScoreManager.Instance.AddScore(totalLines);
             if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("CleanLineSound");
             StartCoroutine(ClearLinesRoutine(completedRows, completedCols));
-
-            return true;
         }
-
-        return false;
+        return (completedRows, completedCols);
     }
 
     private IEnumerator ClearLinesRoutine(List<int> rows, List<int> cols)
     {
         isClearing = true;
-        List<Transform> cellsToClear = new List<Transform>();
-        float duration = 0.4f; // Animasyon süresini biraz artýralým
 
-        // Temizlenecek tüm hücreleri tek bir listede topla
+        List<Transform> cellsToClear = new List<Transform>();
+        float duration = 0.4f;
         foreach (int y in rows)
         {
             for (int x = 0; x < width; x++)
@@ -160,10 +154,18 @@ public class GridManager : MonoBehaviour
         // Animasyonu uygula
         if (cellsToClear.Count > 0)
         {
-            // Önce hepsini parlatalým
+            if (mpb == null) mpb = new MaterialPropertyBlock();
+
+            // Parlama rengini ayarla.
+            mpb.SetColor("_BaseColor", blockColor); // URP ise "_BaseColor"
+
+            // Her bir hücreye bu parlama özelliðini uygula.
             foreach (Transform cell in cellsToClear)
             {
-                if (cell != null) cell.GetComponent<Renderer>().material = initialGridMaterial;
+                if (cell != null)
+                {
+                    cell.GetComponent<Renderer>().SetPropertyBlock(mpb);
+                }
             }
 
             yield return new WaitForSeconds(duration / 2);
@@ -244,30 +246,46 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-
-    public void HighlightLines(List<int> rows, List<int> cols, Material highlightMaterial)
+    Color blockColor;
+    public void HighlightLines(List<int> rows, List<int> cols, Color highlightColor)
     {
-        // Önce tüm grid'i normale döndür
         ResetGridColors();
-        
+        blockColor = highlightColor;
+        if (mpb == null) mpb = new MaterialPropertyBlock(); 
+        mpb.SetColor("_BaseColor", highlightColor);
+
         if (rows != null)
-        {Debug.Log("parlamalý");
+        {
             foreach (int y in rows)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    visualGridCells[x, y].material = highlightMaterial;
+                    if (logicGrid[x, y] != null) // Eðer hücrede bir blok parçasý varsa
+                    {
+                        Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
+                        if (rend != null)
+                        {
+                            // Materyali DEÐÝÞTÝRME, sadece property block'u ata!
+                            rend.SetPropertyBlock(mpb);
+                        }
+                    }
                 }
             }
         }
         if (cols != null)
         {
-            Debug.Log("parlamalý");
             foreach (int x in cols)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    visualGridCells[x, y].material = highlightMaterial;
+                    if (logicGrid[x, y] != null)
+                    {
+                        Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
+                        if (rend != null)
+                        {
+                            rend.SetPropertyBlock(mpb);
+                        }
+                    }
                 }
             }
         }
@@ -275,23 +293,26 @@ public class GridManager : MonoBehaviour
     
     public void ResetGridColors()
     {
+        if (mpb == null) mpb = new MaterialPropertyBlock();
+        mpb.Clear();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                visualGridCells[x, y].material = initialGridMaterial; // Veya baþlangýç rengin neyse o.
+                if (logicGrid[x, y] != null)
+                {
+                    Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
+                    if (rend != null)
+                    {
+                        rend.SetPropertyBlock(mpb);
+                    }
+                }
             }
         }
     }
     public (List<int> rows, List<int> cols) SimulateLineCompletion(BlockData blockData, Vector2Int gridPosition)
     {
-        // 1. Geçici bir mantýksal grid oluþtur ve mevcut grid'i üzerine kopyala.
-        // Bu, ana oyun durumunu bozmamanýn en güvenli yoludur.
         Transform[,] simulatedGrid = (Transform[,])logicGrid.Clone();
-
-        // 2. Bloðu bu geçici grid'e "hayali" olarak yerleþtir.
-        // Herhangi bir null olmayan obje, hücrenin dolu olduðunu belirtmek için yeterlidir.
-        // 'transform' (GridManager'ýn kendi transform'u) bu iþ için kullanýlabilir.
         foreach (var cellOffset in blockData.cells)
         {
             Vector2Int pos = gridPosition + cellOffset;
@@ -301,45 +322,8 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        // 3. Bu geçici grid üzerinde tamamlama kontrolü yap.
-        List<int> completedRows = new List<int>();
-        for (int y = 0; y < height; y++)
-        {
-            bool rowIsComplete = true;
-            for (int x = 0; x < width; x++)
-            {
-                if (simulatedGrid[x, y] == null)
-                {
-                    rowIsComplete = false;
-                    break;
-                }
-            }
-            if (rowIsComplete)
-            {
-                completedRows.Add(y);
-            }
-        }
-
-        List<int> completedCols = new List<int>();
-        for (int x = 0; x < width; x++)
-        {
-            bool colIsComplete = true;
-            for (int y = 0; y < height; y++)
-            {
-                if (simulatedGrid[x, y] == null)
-                {
-                    colIsComplete = false;
-                    break;
-                }
-            }
-            if (colIsComplete)
-            {
-                completedCols.Add(x);
-            }
-        }
-
-        // 4. Sonucu (tamamlanacak satýr ve sütun listelerini) geri döndür.
-        return (completedRows, completedCols);
+        // Artýk ayný fonksiyonu SÝMÜLASYON modunda çaðýrýyoruz.
+        return CheckForCompletedLines(false, simulatedGrid);
     }
 
     public Vector2Int? GetRandomEmptyCell()
@@ -367,8 +351,8 @@ public class GridManager : MonoBehaviour
     [Header("Baþlangýç Bloklarý Ayarlarý")]
     [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
     [Range(0f, 0.5f)]
-    [SerializeField] private float initialFillPercentages = 0.2f; // %20
-    [SerializeField] private int maxPlacementTriess = 50; // sonsuz döngüyü önlemek için deneme sayýsý
+    //[SerializeField] private float initialFillPercentages = 0.2f; // %20
+    //[SerializeField] private int maxPlacementTriess = 50; // sonsuz döngüyü önlemek için deneme sayýsý
     [SerializeField] private Material startBlocksMaterial;
 
     public void GenerateInitialBlocks(float initialFillPercentage, int maxPlacementTries)
