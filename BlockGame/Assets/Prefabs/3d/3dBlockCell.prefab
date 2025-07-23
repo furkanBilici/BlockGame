@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 0.87, y: 0.87, z: 0.87}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bf036a54d41bce84999c2e55479ca298, type: 2}
+  - {fileID: 2100000, guid: 62e6737428027d54490d9e68883de991, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,4 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlaced: 0
-  ghostBlockMaterial: {fileID: 2100000, guid: c99ef530df00a2f49b99fb3ddfd5c4cd, type: 2}
+  ghostBlockColor: {r: 1, g: 1, b: 1, a: 0.29411766}
+  blockBasePrefab: {fileID: 8213470618996796906, guid: 083e3c8a3b6c29e4aa4396d68db03d92, type: 3}
+  blockCellPrefab: {fileID: 7745422584643987635}
+  ghostMaterial: {fileID: 2100000, guid: c99ef530df00a2f49b99fb3ddfd5c4cd, type: 2}

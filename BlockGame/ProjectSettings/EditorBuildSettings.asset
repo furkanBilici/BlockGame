@@ -12,13 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: f71e6814809f9b54cb373428a58eb120
   - enabled: 1
-    path: Assets/Scenes/ClassicMode.unity
+    path: Assets/Scenes/2D/ClassicMode.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/TimedMode.unity
+    path: Assets/Scenes/2D/TimedMode.unity
     guid: 5bc98745910db1a448dfd5d55368c0cd
   - enabled: 1
-    path: Assets/Scenes/CustomGame.unity
+    path: Assets/Scenes/2D/CustomGame.unity
     guid: 411ebf5f553deec45a8092016410e10f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -205,10 +205,11 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
-    public void StartTimedGame(int level)
+    public void StartTimedGame()
     {
+        int level = PlayerPrefs.GetInt("CompletedLevels", 0) + 1;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        PlayerPrefs.SetInt("TimedGameScore", neededScore * level*level);
+        PlayerPrefs.SetInt("TimedGameScore", neededScore * level* (int)MathF.Sqrt(level));
         PlayerPrefs.SetFloat("TimedGameTime", time * level);
         SceneManager.LoadScene(3);
     }

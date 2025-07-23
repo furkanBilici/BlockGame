@@ -4,6 +4,7 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     public BlockData data;
+    public Color color;
     public void AnimationPlacement()
     {
         StartCoroutine(PlacementAnimationRoutine());

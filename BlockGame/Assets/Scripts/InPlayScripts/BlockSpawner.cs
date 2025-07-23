@@ -19,6 +19,8 @@ public class BlockSpawner : MonoBehaviour
     [Header("Oyun Dengesi")]
     [SerializeField] private int maxSpawnAttempts = 50;
 
+    MaterialPropertyBlock mpbBlock;
+
     public static BlockSpawner Instance { get; private set; }
 
     void Awake()
@@ -30,6 +32,7 @@ public class BlockSpawner : MonoBehaviour
 
     void Start()
     {
+        mpbBlock = new MaterialPropertyBlock();
         SpawnNewBlockSet();
     }
 
@@ -84,7 +87,7 @@ public class BlockSpawner : MonoBehaviour
     [Header("Colors")]
     public Color[] colors;
     Color randomColor;
-    Color GetRandomColor()
+    public Color GetRandomColor()
     {
         int random=Random.Range(0,colors.Length);
         return colors[random];
@@ -106,17 +109,19 @@ public class BlockSpawner : MonoBehaviour
         GameObject blockObject = Instantiate(blockBasePrefab, position, Quaternion.identity, spawnParent);
         blockObject.name = data.name;
 
-        Block blockScript = blockObject.AddComponent<Block>();
+        Block blockScript = blockObject.GetComponent<Block>();
         blockScript.data = data;
         activeBlocks.Add(blockObject);
-
+        
         // Renklendirme mantýðýný koruyoruz
-        randomMaterial = GetRandomMaterial();
+        randomColor = GetRandomColor();
+        blockScript.color = randomColor;
+        mpbBlock.SetColor("_BaseColor",randomColor);
         foreach (Vector2Int cellPos in data.cells)
         {
             GameObject cell = Instantiate(data.blockCellPrefab, blockObject.transform);
             cell.transform.localPosition = (Vector2)cellPos;
-            cell.GetComponent<Renderer>().material = randomMaterial;
+            cell.GetComponent<Renderer>().SetPropertyBlock(mpbBlock);
         }
     }
 

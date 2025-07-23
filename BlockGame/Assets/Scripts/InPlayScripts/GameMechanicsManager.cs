@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameMechanicsManager : MonoBehaviour
@@ -11,7 +12,7 @@ public class GameMechanicsManager : MonoBehaviour
     private GridManager gridManager;
     private ScoreManager scoreManager;
 
-    float initialFillPercentace = 0.1f;
+    float initialFillPercentace = 0.25f;
     int maxPlacementTries=50;
     private void Awake()
     {
@@ -24,6 +25,13 @@ public class GameMechanicsManager : MonoBehaviour
         gridManager = FindFirstObjectByType<GridManager>();
         scoreManager = FindFirstObjectByType<ScoreManager>();
         gridManager.GenerateInitialBlocks(initialFillPercentace,maxPlacementTries);
+
+        if (UIManager.Instance.GameType == 2)
+        {
+            initialFillPercentace = initialFillPercentace * PlayerPrefs.GetInt("CompletedLevels",0)/3;
+            if (initialFillPercentace >= 0.5) initialFillPercentace = 0.5f;
+        }
+        
     }
     public void OnBlockPlaced()
     {
@@ -41,17 +49,35 @@ public class GameMechanicsManager : MonoBehaviour
         Vector2Int? spawnPosition = gridManager.GetRandomEmptyCell();
         if (spawnPosition.HasValue)
         {
-            GameObject suprizeBlock = Instantiate(suprizeBlockPrefab, (Vector2)spawnPosition.Value, Quaternion.identity, gridManager.transform);
-            suprizeBlock.name = "SuprizeBlock";
-            gridManager.OccupyCell(spawnPosition.Value,suprizeBlock.transform);
+            StartCoroutine(SuprizeBlockSpawner(spawnPosition));
         }
+    }
+    IEnumerator SuprizeBlockSpawner(Vector2Int? spawnPosition)
+    {
+        GameObject suprizeBlock = Instantiate(suprizeBlockPrefab, (Vector2)spawnPosition.Value, Quaternion.identity, gridManager.transform);
+        suprizeBlock.name = "SurpriseBox";
+        gridManager.OccupyCell(spawnPosition.Value, suprizeBlock.transform,suprizeBlock.name);
+
+        float animationDuration = 0.2f;
+        float time = 0;
+        Vector3 firstScale = new Vector3(0.1f, 0.1f, 0.1f);
+        Vector3 lastScale = new Vector3(1, 1, 1);
+      
+        suprizeBlock.transform.localScale = firstScale;
+        while (time < animationDuration)
+        {
+            time += Time.deltaTime;
+            suprizeBlock.transform.localScale = Vector3.Lerp(firstScale, lastScale, time / animationDuration);
+            yield return null;
+        }
+        suprizeBlock.transform.localScale = lastScale;
     }
     public void OnTriggerSurprise()
     {
         if (Random.value > 0.5f)
         {
-            Debug.Log("ÝYÝ SÜRPRÝZ! +50 Bonus Puan!");
-            if (scoreManager != null) scoreManager.AddScore(50); // AddBonusScore yerine AddScore kullanalým
+            Debug.Log("ÝYÝ SÜRPRÝZ! Bonus Puan!");
+            if (scoreManager != null) scoreManager.AddScore(3);
         }
         else
         {

@@ -23,9 +23,14 @@ public class BlockDragger : MonoBehaviour
     Vector3 offsetForBlock=new Vector3(0,3f,0f);
     Vector3 offsetForZ = new Vector3(0, 0,-0.5f);
 
-    [SerializeField] Material ghostBlockMaterial;
-    Material blockMaterial;
+    [SerializeField] Color ghostBlockColor;
+    Color blockColor;
+    private MaterialPropertyBlock ghostMpb;
 
+    [Header("Referanslar")]
+    [SerializeField] private GameObject blockBasePrefab; // BlockSpawner'dakiyle ayný boþ obje prefab'ý
+    [SerializeField] private GameObject blockCellPrefab; // BlockSpawner'dakiyle ayný tek küp prefab'ý
+    [SerializeField] private Material ghostMaterial;
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -33,12 +38,16 @@ public class BlockDragger : MonoBehaviour
         gridManager = FindFirstObjectByType<GridManager>();
         dragPlaneLayerMask = LayerMask.GetMask("DragPlane");
     }
+    private void Start()
+    {
+        ghostMpb=new MaterialPropertyBlock();
+    }
     void OnMouseDown()
     {
         if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
         isDragging = true;
-        blockMaterial = blockParent.GetComponentInChildren<Renderer>().material;
+        blockColor = blockParent.GetComponentInChildren<Block>().color;
 
         GhostBlockCreator();
         Vector3? hitPoint = GetMouseWorldPositionOnPlane();
@@ -122,7 +131,6 @@ public class BlockDragger : MonoBehaviour
     private void ShowGhost()
     {
         if (ghostBlock == null) return;
-
         Block block = blockParent.GetComponent<Block>();
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
 
@@ -131,11 +139,15 @@ public class BlockDragger : MonoBehaviour
             ghostBlock.transform.position = new Vector3(gridPos.x, gridPos.y, 0); // Z pozisyonu 0'da
             ghostBlock.SetActive(true);
 
+            foreach (Renderer renderer in ghostBlock.GetComponentsInChildren<Renderer>())
+            {
+                renderer.SetPropertyBlock(ghostMpb);
+            }
             var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
             if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
             {
-               
-                gridManager.HighlightLines(completedLines.rows, completedLines.cols, blockMaterial.color);
+
+                gridManager.HighlightLines(completedLines.rows, completedLines.cols, blockColor);
             }
             else
             {
@@ -151,21 +163,18 @@ public class BlockDragger : MonoBehaviour
 
     void GhostBlockCreator()
     {
-        ghostBlock = Instantiate(blockParent.gameObject);
+        ghostBlock = Instantiate(blockBasePrefab);
         ghostBlock.name = "GhostBlock";
 
-        // Hayaletin sürüklenememesi için üzerindeki tüm BlockDragger'larý kaldýr.
-        foreach (var dragger in ghostBlock.GetComponentsInChildren<BlockDragger>())
-        {
-            Destroy(dragger);
-        }
+        BlockData data = blockParent.GetComponent<Block>().data;
 
-        // 3D objeler için SpriteRenderer deðil, Renderer'ý hedef almalýyýz.
-        foreach (Renderer renderer in ghostBlock.GetComponentsInChildren<Renderer>())
+        foreach (Vector2Int cellPos in data.cells)
         {
-            renderer.material = ghostBlockMaterial;
-        }
+           GameObject cell = Instantiate(blockCellPrefab, ghostBlock.transform);
+           cell.transform.localPosition = (Vector2)cellPos;
 
+            cell.GetComponent<Renderer>().material = ghostMaterial;
+        }
         ghostBlock.SetActive(false);
     }
 }

@@ -15,11 +15,12 @@ public class GridManager : MonoBehaviour
 
     //private Renderer[,] visualGridCells;
     CustomGameManager cGameManager;
-    Color initialGridColor;
+   // Color initialGridColor;
     private MaterialPropertyBlock mpb;
     private void Awake()
     { 
-        initialGridColor=startBlocksMaterial.color;
+        mpb=new MaterialPropertyBlock();
+       // initialGridColor=startBlocksMaterial.color;
         cGameManager = FindFirstObjectByType<CustomGameManager>();
         if (cGameManager!=null)
         {
@@ -32,7 +33,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        GenerateGrid(); 
+        GenerateGrid();
     }
 
     void GenerateGrid()
@@ -47,7 +48,7 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                GameObject newCell = Instantiate(gridCellPrefab, new Vector3(x, y, 0), Quaternion.identity, this.transform);
+                GameObject newCell = Instantiate(gridCellPrefab, new Vector3(x, y, 0.5f), Quaternion.identity, this.transform);
                 newCell.name = $"Cell({x},{y})";
                 //visualGridCells[x, y] = newCell.GetComponent<SpriteRenderer>();
                 
@@ -123,6 +124,10 @@ public class GridManager : MonoBehaviour
             {
                 if (logicGrid[x, y] != null && !cellsToClear.Contains(logicGrid[x, y]))
                 {
+                    if (logicGrid[x, y].name == "SurpriseBox")
+                    {
+                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
+                    }
                     cellsToClear.Add(logicGrid[x, y]);
                 }
             }
@@ -133,28 +138,16 @@ public class GridManager : MonoBehaviour
             {
                 if (logicGrid[x, y] != null && !cellsToClear.Contains(logicGrid[x, y]))
                 {
-                    cellsToClear.Add(logicGrid[x, y]);
-                }
-            }
-        }
-        foreach (int y in rows)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                if (logicGrid[x, y] != null)
-                {
                     if (logicGrid[x, y].name == "SurpriseBox")
                     {
                         if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
                     }
-                    if (!cellsToClear.Contains(logicGrid[x, y])) cellsToClear.Add(logicGrid[x, y]);
+                    cellsToClear.Add(logicGrid[x, y]);
                 }
             }
         }
-        // Animasyonu uygula
         if (cellsToClear.Count > 0)
         {
-            if (mpb == null) mpb = new MaterialPropertyBlock();
 
             // Parlama rengini ayarla.
             mpb.SetColor("_BaseColor", blockColor); // URP ise "_BaseColor"
@@ -251,7 +244,6 @@ public class GridManager : MonoBehaviour
     {
         ResetGridColors();
         blockColor = highlightColor;
-        if (mpb == null) mpb = new MaterialPropertyBlock(); 
         mpb.SetColor("_BaseColor", highlightColor);
 
         if (rows != null)
@@ -293,7 +285,6 @@ public class GridManager : MonoBehaviour
     
     public void ResetGridColors()
     {
-        if (mpb == null) mpb = new MaterialPropertyBlock();
         mpb.Clear();
         for (int x = 0; x < width; x++)
         {
@@ -301,9 +292,22 @@ public class GridManager : MonoBehaviour
             {
                 if (logicGrid[x, y] != null)
                 {
-                    Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
-                    if (rend != null)
+                    Transform cellTransform = logicGrid[x, y];
+                    Renderer rend = cellTransform.GetComponent<Renderer>();
+
+                    // Parçanýn ana bloðunu (parent'ýný) bul.
+                    Block parentBlock = cellTransform.GetComponentInParent<Block>();
+
+                    // Hem renderer hem de ana blok bulunduysa devam et (NullReferenceException'ý önler).
+                    if (rend != null && parentBlock != null)
                     {
+                        // 1. Ana bloðun hafýzasýndan (Block script'i) doðru rengi oku.
+                        Color originalColor = parentBlock.color; // Block.cs'te 'public Color color;' olmalý.
+
+                        // 2. MPB'yi bu renkle doldur.
+                        mpb.SetColor("_BaseColor", originalColor); // Veya "_BaseColor"
+
+                        // 3. Bu rengi, o anki blok parçasýna uygula.
                         rend.SetPropertyBlock(mpb);
                     }
                 }
@@ -340,11 +344,12 @@ public class GridManager : MonoBehaviour
         return emptyCells[Random.Range(0, emptyCells.Count)];
     }
 
-    public void OccupyCell(Vector2Int position, Transform obj)
+    public void OccupyCell(Vector2Int position, Transform obj, string name)
     {
         if (IsWithinGrid(position.x, position.y))
         {
             logicGrid[position.x, position.y] = obj;
+            logicGrid[position.x, position.y].name = name;
         }
     }
 
@@ -385,12 +390,18 @@ public class GridManager : MonoBehaviour
                 GameObject blockObject = Instantiate(BlockSpawner.Instance.blockBasePrefab, (Vector2)randomPosition, Quaternion.identity, this.transform);
                 blockObject.name = $"Initial_{randomBlockData.name}";
 
+                Color randomColor= BlockSpawner.Instance.GetRandomColor();
+
+                blockObject.GetComponent<Block>().color=randomColor;
+
+                mpb.SetColor("_BaseColor", randomColor);
+
                 foreach (Vector2Int cellPos in randomBlockData.cells)
                 {
                     // Görsel hücreleri oluþtur
                     GameObject cell = Instantiate(randomBlockData.blockCellPrefab, blockObject.transform);
                     cell.transform.localPosition = (Vector2)cellPos;
-                    cell.GetComponent<Renderer>().material = startBlocksMaterial;
+                    cell.GetComponent<Renderer>().SetPropertyBlock(mpb);
 
                     // Mantýksal grid'i güncelle
                     Vector2Int targetPos = randomPosition + cellPos;
