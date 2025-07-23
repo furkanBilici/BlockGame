@@ -24,14 +24,19 @@ public class GameMechanicsManager : MonoBehaviour
     {
         gridManager = FindFirstObjectByType<GridManager>();
         scoreManager = FindFirstObjectByType<ScoreManager>();
-        gridManager.GenerateInitialBlocks(initialFillPercentace,maxPlacementTries);
 
-        if (UIManager.Instance.GameType == 2)
+
+        if (UIManager.Instance.GameType == 1)
         {
             initialFillPercentace = initialFillPercentace * PlayerPrefs.GetInt("CompletedLevels",0)/3;
             if (initialFillPercentace >= 0.5) initialFillPercentace = 0.5f;
         }
-        
+        if(UIManager.Instance.GameType == 2)
+        {
+            initialFillPercentace = initialFillPercentace * PlayerPrefs.GetInt("difficulty", 0);
+        }
+        gridManager.GenerateInitialBlocks(initialFillPercentace, maxPlacementTries);
+
     }
     public void OnBlockPlaced()
     {

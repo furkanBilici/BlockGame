@@ -164,9 +164,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] float time = 25f;
     [SerializeField] int neededScore = 20;
     [SerializeField] GameObject timedPanel;
-    public Button levelOne;
-    public Button levelTwo;
-    public Button levelThree;
+    public Button level;
 
     public void TimedPanelController()
     {
@@ -177,32 +175,7 @@ public class MainMenuManager : MonoBehaviour
         else
         {
             timedPanel.SetActive(true);
-            if (PlayerPrefs.GetInt("CompletedLevels",0) == 0)
-            {
-                levelOne.image.color=Color.yellow;
-                levelTwo.image.color = Color.red;
-                levelTwo.interactable = false;
-                levelThree.image.color=Color.red;
-                levelThree.interactable = false;
-            }
-            else if (PlayerPrefs.GetInt("CompletedLevels") == 1)
-            {
-                levelOne.image.color = Color.green;
-                levelTwo.image.color = Color.yellow;
-                levelTwo.interactable = true;
-                levelThree.image.color = Color.red;
-                levelThree.interactable = false;
-            }
-            else if (PlayerPrefs.GetInt("CompletedLevels") == 2)
-            {
-                levelTwo.image.color = Color.green;
-                levelThree.image.color = Color.yellow;
-                levelThree.interactable = true;
-            }
-            else
-            {
-                levelThree.image.color = Color.green;
-            }
+            level.GetComponentInChildren<TextMeshProUGUI>().text="LEVEL "+(PlayerPrefs.GetInt("CompletedLevels",0)+1);
         }
     }
     public void StartTimedGame()
@@ -214,7 +187,7 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(3);
     }
     [Header("CustomMode")]
-    [SerializeField] int boardScale = 0;//0=8x8,1=9x9,2=10x10
+    [SerializeField] int boardScale = 0;//0=7x7,1=8x8,2=9x9
     [SerializeField] int difficulty = 0;//0=easy, 1 normal, 2=hard
     public void CustomModePanel()
     {

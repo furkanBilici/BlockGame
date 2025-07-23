@@ -56,7 +56,7 @@ public class TimeManager : MonoBehaviour
                 AudioManager.Instance.PlaySFX("WinSound");
                 AudioManager.Instance.StopAllMusic();
             }
-            if (completedLevels <= 3 && !winScreen.activeSelf) 
+            if (!winScreen.activeSelf) 
             {
                 completedLevels++;
                 PlayerPrefs.SetInt("CompletedLevels", completedLevels);

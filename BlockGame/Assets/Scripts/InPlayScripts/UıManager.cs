@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour
         {
             // Butonun týklanabilirliðini, reklamýn yüklenip yüklenmediðine göre ayarla.
             // Bu, oyuncunun hazýr olmayan bir reklama basmasýný engeller.
-            watchAdButton.interactable = AdsManager.Instance.IsRewardedAdLoaded;
+           if(AdsManager.Instance!=null) watchAdButton.interactable = AdsManager.Instance.IsRewardedAdLoaded;
         }
     }
     public void ShowGameOverPanel()
