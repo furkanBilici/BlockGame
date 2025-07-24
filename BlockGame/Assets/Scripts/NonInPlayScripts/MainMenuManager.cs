@@ -56,7 +56,6 @@ public class MainMenuManager : MonoBehaviour
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
         if(LootLockerManager.Instance!=null) CheckForPlayerName();
-        ScoreChecker();
         
     }
     public void StartGame()
@@ -186,6 +185,8 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.SetFloat("TimedGameTime", time * level);
         SceneManager.LoadScene(3);
     }
+
+    
     [Header("CustomMode")]
     [SerializeField] int boardScale = 0;//0=7x7,1=8x8,2=9x9
     [SerializeField] int difficulty = 0;//0=easy, 1 normal, 2=hard
@@ -292,8 +293,10 @@ public class MainMenuManager : MonoBehaviour
     public GameObject scoreEntryPrefab;
     public GameObject noConnectionPanel;
 
+    public TextMeshProUGUI highscoreTitle;
+
     private const string LEADERBOARD_KEY = "global_high_scores";
-    public void ShowHighScoreBoardPanel()
+    public void ShowHighScoreBoardPanel(int listType)
     {
         if (HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf)
         {
@@ -310,22 +313,68 @@ public class MainMenuManager : MonoBehaviour
         }
         HighscoreBoardPanel.SetActive(true);
 
-        foreach(Transform child in scoreContentParent.transform) Destroy(child.gameObject);
+        foreach (Transform child in scoreContentParent.transform) Destroy(child.gameObject);
 
-        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 10, (response) =>
+        string countryCode = null;
+        string title = "HIGHEST SCORES ";
+
+        // Hangi listenin istendiðine göre parametreleri ve baþlýðý ayarla
+        switch (listType)
+        {
+            case 0: // GLOBAL
+                title += "GLOBAL";
+                countryCode = null; // Ülke kodu null olunca global liste gelir.
+                break;
+            case 1: // ÜLKE
+                title += "MY COUNTRY";
+                countryCode = PlayerPrefs.GetString("CountryCode", null); // Ülke kodunu PlayerPrefs'ten al.
+                break;
+            // Not: LootLocker þehir bazýnda filtrelemeyi doðrudan desteklemiyor.
+            // Bu yüzden þehir mantýðýný þimdilik devre dýþý býrakýyoruz.
+            case 2: // ÞEHÝR (Þimdilik devre dýþý)
+                title += "MY CITY";
+                return; // Fonksiyonu bitir.
+        }
+        highscoreTitle.text = title;
+        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 10,(response) =>
         {
             if (response.success)
             {
                 LootLockerLeaderboardMember[] scores = response.items;
+                string metadata;
                 for(int i = 0; i < scores.Length; i++)
                 {
-                    GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
-                    TextMeshProUGUI rankText=entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
-                    TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-                    TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                    rankText.text = scores[i].rank + ".";
-                    nameText.text = scores[i].player.name;
-                    scoreText.text = scores[i].score.ToString();
+                    metadata = scores[i].metadata;
+                    if(listType == 0)
+                    {
+                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
+                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+                        rankText.text = scores[i].rank + ".";
+                        nameText.text = scores[i].player.name;
+                        scoreText.text = scores[i].score.ToString();
+                    }
+                    if (listType==1 && metadata.Contains(PlayerPrefs.GetString("CountryCode")))
+                    {
+                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
+                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+                        rankText.text = scores[i].rank + ".";
+                        nameText.text = scores[i].player.name;
+                        scoreText.text = scores[i].score.ToString();
+                    }
+                    if (listType == 2 && metadata.Contains(PlayerPrefs.GetString("City")))
+                    {
+                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
+                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
+                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+                        rankText.text = scores[i].rank + ".";
+                        nameText.text = scores[i].player.name;
+                        scoreText.text = scores[i].score.ToString();
+                    }
 
                 }
             }
@@ -348,13 +397,25 @@ public class MainMenuManager : MonoBehaviour
     void CheckForPlayerName()
     {
         string playerName=PlayerPrefs.GetString(PLAYER_NAME_KEY);
-        if (String.IsNullOrEmpty(playerName ) && Application.internetReachability!=NetworkReachability.NotReachable)
+        if (String.IsNullOrEmpty(playerName) && Application.internetReachability!=NetworkReachability.NotReachable)
         {
             setNamePanel.SetActive(true);
         }
         if(!String.IsNullOrEmpty(playerName))
-        {
-            welcomText.text ="WELCOME: "+ playerName;
+        {  
+            LootLockerManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+            {
+                if (nameExists)
+                {
+                    welcomText.text = "WELCOME: " + playerName;
+                }
+                else
+                {
+                    LootLockerManager.Instance.SetPlayerName(playerName);
+                    welcomText.text = "WELCOME: " + playerName;
+                }
+            });
+            ScoreChecker();
         }
     }
     public void ConfirmPlayerName() 

@@ -26,6 +26,11 @@ public class LootLockerManager : MonoBehaviour
             if (response.success)
             {
                 Debug.Log("lootlocker basarili sekilde baglandi");
+
+                if (LocationManager.Instance != null)
+                {
+                    LocationManager.Instance.CheckAndUpdateLocation();
+                }
             }
             else
             {
@@ -51,14 +56,18 @@ public class LootLockerManager : MonoBehaviour
             return;
         }
     }
+
     private System.Collections.IEnumerator SubmitScoreRoutine(string playerName, int scoreToSubmit)
     {
+        string countryCode = LocationManager.Instance.countryCode;
+        string city= LocationManager.Instance.city; 
+        string metadata = $"{{\"country\":\"{countryCode}\",\"city\":\"{city}\"}}";
         bool done = false;
-        LootLockerSDKManager.SubmitScore(playerName, scoreToSubmit, LEADERBOARD_KEY, (response) =>
+        LootLockerSDKManager.SubmitScore(playerName, scoreToSubmit, LEADERBOARD_KEY, metadata, (response) =>
         {
             if (response.success)
             {
-                Debug.Log("skor gönderildi " + scoreToSubmit);
+                Debug.Log("skor gönderildi " + scoreToSubmit+metadata);
             }
             else
             {
