@@ -13,7 +13,7 @@ public class CameraManager : MonoBehaviour
         while (aspectRatio >startheight / startwidth)
         {
             startheight += 2;
-            startfov += 5;
+            startfov += 7;
         }
         cam.fieldOfView=startfov; 
     }

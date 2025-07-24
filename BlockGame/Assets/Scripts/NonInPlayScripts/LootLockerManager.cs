@@ -7,7 +7,7 @@ public class LootLockerManager : MonoBehaviour
     private const string LEADERBOARD_KEY = "global_high_scores";
     private const string PLAYER_NAME_KEY = "PlayerName";
 
-
+    public string currentPlayerCountryCode = ""; 
     private void Awake()
     {
         if (Instance != null && Instance != this) Destroy(gameObject);

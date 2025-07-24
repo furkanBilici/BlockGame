@@ -62,7 +62,7 @@ public class AdsManager : MonoBehaviour
             bannerView = null;
         }
         AdSize adaptiveSize = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
-        this.bannerView = new BannerView(bannerAdUnitId, adaptiveSize, AdPosition.Bottom);
+        this.bannerView = new BannerView(bannerAdUnitId, adaptiveSize, AdPosition.Top);
         ListenToBannerEvents();
         var adRequest =new AdRequest();
         this.bannerView.LoadAd(adRequest);

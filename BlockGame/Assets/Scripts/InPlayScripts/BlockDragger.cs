@@ -20,8 +20,7 @@ public class BlockDragger : MonoBehaviour
     private const int DRAGGING_SORTING_ORDER = 10;
     private const int PLACED_SORTING_ORDER = 0;
 
-    Vector3 offsetForBlock=new Vector3(0,3f,0f);
-    Vector3 offsetForZ = new Vector3(0, 0,-0.5f);
+    Vector3 offsetForZ = new Vector3(0, 2f,-0.8f);
 
     [SerializeField] Color ghostBlockColor;
     Color blockColor;
@@ -54,7 +53,7 @@ public class BlockDragger : MonoBehaviour
         initialPosition = blockParent.position;
         if (hitPoint.HasValue)
         {
-            offset = blockParent.position - (hitPoint.Value + offsetForBlock);
+            offset = blockParent.position - (hitPoint.Value);
         }
     }
 
@@ -65,7 +64,7 @@ public class BlockDragger : MonoBehaviour
         Vector3? hitPoint = GetMouseWorldPositionOnPlane();
         if (hitPoint.HasValue)
         {
-            blockParent.position = hitPoint.Value + offsetForBlock + offset+ offsetForZ;
+            blockParent.position = hitPoint.Value + offset+ offsetForZ;
         }
         ShowGhost();   
     }

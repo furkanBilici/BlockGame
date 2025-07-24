@@ -92,16 +92,6 @@ public class BlockSpawner : MonoBehaviour
         int random=Random.Range(0,colors.Length);
         return colors[random];
     }
-
-    [Header("Materials")]
-    public Material[] materials;
-    Material randomMaterial;
-    
-    Material GetRandomMaterial()
-    {
-        int random = Random.Range(0, materials.Length);
-        return materials[random];
-    }
     private void SpawnBlock(BlockData data, Vector2 position)
     {
         if (data == null) return;
