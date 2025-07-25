@@ -35,13 +35,15 @@ public class LocationManager : MonoBehaviour
         {
             long lastCheckTicks = long.Parse(PlayerPrefs.GetString(LAST_CHECK_TIME_KEY));
             System.DateTime lastCheckTime = new System.DateTime(lastCheckTicks);
-            if ((System.DateTime.UtcNow - lastCheckTime).TotalHours < 24)
+            if ((System.DateTime.UtcNow - lastCheckTime).TotalHours < 72)
             {
-                Debug.Log("Son konum kontrolünden bu yana 24 saat geçmedi. Ýstek atlanýyor.");
+                Debug.Log("Son konum kontrolünden bu yana 72 saat geçmedi. Ýstek atlanýyor.");
                 return;
             }
         }
         StartCoroutine(GetLocationFromIp());
+
+            
     }
     private IEnumerator GetLocationFromIp()
     {

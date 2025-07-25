@@ -10,6 +10,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int height = 8;
     [SerializeField] private GameObject gridCellPrefab;
 
+    [SerializeField] private Animator birdAnimator;
+
     private Transform[,] logicGrid;
     private bool isClearing = false;
 
@@ -128,6 +130,7 @@ public class GridManager : MonoBehaviour
                     {
                         if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
                     }
+                    if (birdAnimator != null) birdAnimator.Play("Spin");
                     cellsToClear.Add(logicGrid[x, y]);
                 }
             }
@@ -142,6 +145,7 @@ public class GridManager : MonoBehaviour
                     {
                         if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
                     }
+                    if (birdAnimator != null) birdAnimator.Play("Spin");
                     cellsToClear.Add(logicGrid[x, y]);
                 }
             }
@@ -155,7 +159,7 @@ public class GridManager : MonoBehaviour
             // Her bir hücreye bu parlama özelliðini uygula.
             foreach (Transform cell in cellsToClear)
             {
-                if (cell != null)
+                if (cell != null && cell.name!="SurpriseBox")
                 {
                     cell.GetComponent<Renderer>().SetPropertyBlock(mpb);
                 }
@@ -204,6 +208,7 @@ public class GridManager : MonoBehaviour
         
         isClearing = false;
         if (BlockSpawner.Instance != null) BlockSpawner.Instance.OnActionFinished();
+        
 
     }
 
@@ -254,11 +259,14 @@ public class GridManager : MonoBehaviour
                 {
                     if (logicGrid[x, y] != null) // Eðer hücrede bir blok parçasý varsa
                     {
-                        Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
-                        if (rend != null)
+                        if (logicGrid[x, y].name != "SurpriseBox")
                         {
-                            // Materyali DEÐÝÞTÝRME, sadece property block'u ata!
-                            rend.SetPropertyBlock(mpb);
+                            Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
+                            if (rend != null)
+                            {
+                                // Materyali DEÐÝÞTÝRME, sadece property block'u ata!
+                                rend.SetPropertyBlock(mpb);
+                            }
                         }
                     }
                 }
@@ -272,10 +280,13 @@ public class GridManager : MonoBehaviour
                 {
                     if (logicGrid[x, y] != null)
                     {
-                        Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
-                        if (rend != null)
+                        if (logicGrid[x, y].name != "SurpriseBox")
                         {
-                            rend.SetPropertyBlock(mpb);
+                            Renderer rend = logicGrid[x, y].GetComponent<Renderer>();
+                            if (rend != null)
+                            {
+                                rend.SetPropertyBlock(mpb);
+                            }
                         }
                     }
                 }
@@ -301,14 +312,17 @@ public class GridManager : MonoBehaviour
                     // Hem renderer hem de ana blok bulunduysa devam et (NullReferenceException'ý önler).
                     if (rend != null && parentBlock != null)
                     {
-                        // 1. Ana bloðun hafýzasýndan (Block script'i) doðru rengi oku.
-                        Color originalColor = parentBlock.color; // Block.cs'te 'public Color color;' olmalý.
+                        if (logicGrid[x, y].name != "SurpriseBox")
+                        {
+                            // 1. Ana bloðun hafýzasýndan (Block script'i) doðru rengi oku.
+                            Color originalColor = parentBlock.color; // Block.cs'te 'public Color color;' olmalý.
 
-                        // 2. MPB'yi bu renkle doldur.
-                        mpb.SetColor("_BaseColor", originalColor); // Veya "_BaseColor"
+                            // 2. MPB'yi bu renkle doldur.
+                            mpb.SetColor("_BaseColor", originalColor); // Veya "_BaseColor"
 
-                        // 3. Bu rengi, o anki blok parçasýna uygula.
-                        rend.SetPropertyBlock(mpb);
+                            // 3. Bu rengi, o anki blok parçasýna uygula.
+                            rend.SetPropertyBlock(mpb);
+                        }
                     }
                 }
             }

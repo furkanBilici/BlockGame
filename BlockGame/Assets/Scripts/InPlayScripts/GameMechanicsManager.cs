@@ -52,7 +52,11 @@ public class GameMechanicsManager : MonoBehaviour
     {
         if (gridManager == null) return;
         Vector2Int? spawnPosition = gridManager.GetRandomEmptyCell();
-        if (spawnPosition.HasValue)
+        if (!spawnPosition.HasValue)
+        {
+            return;
+        }
+        else
         {
             StartCoroutine(SuprizeBlockSpawner(spawnPosition));
         }

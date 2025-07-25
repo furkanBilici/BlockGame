@@ -58,16 +58,16 @@ public class LootLockerManager : MonoBehaviour
     }
 
     private System.Collections.IEnumerator SubmitScoreRoutine(string playerName, int scoreToSubmit)
-    {
+    {/*
         string countryCode = LocationManager.Instance.countryCode;
         string city= LocationManager.Instance.city; 
-        string metadata = $"{{\"country\":\"{countryCode}\",\"city\":\"{city}\"}}";
+        string metadata = $"{{\"country\":\"{countryCode}\",\"city\":\"{city}\"}}";*/
         bool done = false;
-        LootLockerSDKManager.SubmitScore(playerName, scoreToSubmit, LEADERBOARD_KEY, metadata, (response) =>
+        LootLockerSDKManager.SubmitScore(playerName, scoreToSubmit, LEADERBOARD_KEY, /*metadata,*/ (response) =>
         {
             if (response.success)
             {
-                Debug.Log("skor gönderildi " + scoreToSubmit+metadata);
+                Debug.Log("skor gönderildi " + scoreToSubmit/*+ metadata*/);
             }
             else
             {

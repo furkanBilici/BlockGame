@@ -86,11 +86,11 @@ public class BlockDragger : MonoBehaviour
             blockParent.position = finalPos;
 
             BlockSpawner.Instance.RemoveFromActiveBlocks(blockParent.gameObject);
-            if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnBlockPlaced();
+           
             gridManager.PlaceBlock(blockParent.gameObject, gridPos);
-
             block.AnimationPlacement();
             SetAsPlaced();
+            if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnBlockPlaced();
         }
         else
         {

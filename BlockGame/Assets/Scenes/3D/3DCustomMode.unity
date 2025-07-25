@@ -1807,6 +1807,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 968997382}
   m_CullTransparentMesh: 1
+--- !u!95 &1022841577 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 58a3ba44a00b05e438cec67596acd50f, type: 3}
+  m_PrefabInstance: {fileID: 943574893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1040149127
 GameObject:
   m_ObjectHideFlags: 0
@@ -2220,7 +2225,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1547703282}
   - {fileID: 341925657}
   - {fileID: 1723760830}
   - {fileID: 1989152704}
@@ -2228,6 +2232,7 @@ Transform:
   - {fileID: 1445222162}
   - {fileID: 1040149128}
   - {fileID: 266966231}
+  - {fileID: 1547703282}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1223430348
@@ -3009,6 +3014,7 @@ MonoBehaviour:
   width: 9
   height: 9
   gridCellPrefab: {fileID: 5488374026705329908, guid: 2518c590644decd4ebf85026d68c3ad3, type: 3}
+  birdAnimator: {fileID: 1022841577}
   startBlocksMaterial: {fileID: 2100000, guid: ce3114fe4a10a6b43a355d44e59d5f9f, type: 2}
 --- !u!4 &1730201958
 Transform:

@@ -1,3 +1,4 @@
+using LootLocker.LootLockerEnums;
 using LootLocker.Requests;
 using System;
 using TMPro;
@@ -298,45 +299,41 @@ public class MainMenuManager : MonoBehaviour
     private const string LEADERBOARD_KEY = "global_high_scores";
     public void ShowHighScoreBoardPanel(int listType)
     {
-        if (HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf)
+        if ((HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf) && !(listType==1 || listType==2|| listType==0))
         {
             HighscoreBoardPanel.SetActive(false);
             noConnectionPanel.SetActive(false);
             return;
         }
-        
+       
+
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             Debug.Log("internet yok");
             noConnectionPanel.SetActive(true);
             return;
         }
+       
         HighscoreBoardPanel.SetActive(true);
-
         foreach (Transform child in scoreContentParent.transform) Destroy(child.gameObject);
 
-        string countryCode = null;
         string title = "HIGHEST SCORES ";
 
-        // Hangi listenin istendiðine göre parametreleri ve baþlýðý ayarla
         switch (listType)
         {
             case 0: // GLOBAL
                 title += "GLOBAL";
-                countryCode = null; // Ülke kodu null olunca global liste gelir.
                 break;
             case 1: // ÜLKE
-                title += "MY COUNTRY";
-                countryCode = PlayerPrefs.GetString("CountryCode", null); // Ülke kodunu PlayerPrefs'ten al.
+                title += "MY COUNTRY";// Ülke kodunu PlayerPrefs'ten al.
                 break;
-            // Not: LootLocker þehir bazýnda filtrelemeyi doðrudan desteklemiyor.
-            // Bu yüzden þehir mantýðýný þimdilik devre dýþý býrakýyoruz.
-            case 2: // ÞEHÝR (Þimdilik devre dýþý)
+            case 2: // ÞEHÝR
                 title += "MY CITY";
-                return; // Fonksiyonu bitir.
+                break; // Fonksiyonu bitir.
         }
         highscoreTitle.text = title;
-        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 10,(response) =>
+
+        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 1000,(response) =>
         {
             if (response.success)
             {
@@ -361,23 +358,25 @@ public class MainMenuManager : MonoBehaviour
                         TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
                         TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
                         TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                        rankText.text = scores[i].rank + ".";
+                        rankText.text = (i + 1) + ".";
                         nameText.text = scores[i].player.name;
                         scoreText.text = scores[i].score.ToString();
                     }
                     if (listType == 2 && metadata.Contains(PlayerPrefs.GetString("City")))
                     {
+                        
                         GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
                         TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
                         TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
                         TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                        rankText.text = scores[i].rank + ".";
+                        rankText.text = (i+1) + ".";
                         nameText.text = scores[i].player.name;
                         scoreText.text = scores[i].score.ToString();
                     }
 
                 }
             }
+            
             else
             {
                 Debug.Log("liste getirilemedi");

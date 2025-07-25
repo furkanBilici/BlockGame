@@ -2804,6 +2804,7 @@ MonoBehaviour:
   width: 8
   height: 8
   gridCellPrefab: {fileID: 5488374026705329908, guid: 2518c590644decd4ebf85026d68c3ad3, type: 3}
+  birdAnimator: {fileID: 2020910851}
   startBlocksMaterial: {fileID: 2100000, guid: ce3114fe4a10a6b43a355d44e59d5f9f, type: 2}
 --- !u!4 &1730201958
 Transform:
@@ -3006,6 +3007,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2020910851 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 58a3ba44a00b05e438cec67596acd50f, type: 3}
+  m_PrefabInstance: {fileID: 9075193169397753470}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2101211124
 GameObject:
   m_ObjectHideFlags: 0
