@@ -90,7 +90,7 @@ public class BlockDragger : MonoBehaviour
             gridManager.PlaceBlock(blockParent.gameObject, gridPos);
             block.AnimationPlacement();
             SetAsPlaced();
-            if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnBlockPlaced();
+           
         }
         else
         {

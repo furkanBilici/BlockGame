@@ -78,7 +78,7 @@ public class GridManager : MonoBehaviour
         blockObject.transform.parent = this.transform;
         var completedLines=CheckForCompletedLines(true);
         bool linesWereCleared = (completedLines.rows.Count > 0 || completedLines.cols.Count > 0);
-
+        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnBlockPlaced();
         if (!linesWereCleared)
         {
             BlockSpawner.Instance.OnActionFinished();
