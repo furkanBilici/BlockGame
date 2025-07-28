@@ -57,7 +57,7 @@ public class BlockSpawner : MonoBehaviour
             bool isSetValid = false;
             foreach (BlockData data in candidateData)
             {
-                if (gridManager.IsAnyMovePossible(data))
+                if (gridManager.IsAnyMovePossible(data.cells))
                 {
                     isSetValid = true;
                     break;
@@ -101,6 +101,7 @@ public class BlockSpawner : MonoBehaviour
 
         Block blockScript = blockObject.GetComponent<Block>();
         blockScript.data = data;
+        blockScript.currentShapeCells = data.cells;
         activeBlocks.Add(blockObject);
         
         // Renklendirme mantýðýný koruyoruz
@@ -139,8 +140,8 @@ public class BlockSpawner : MonoBehaviour
         foreach (GameObject blockObject in activeBlocks)
         {
             if (blockObject == null) continue; // Güvenlik kontrolü
-            BlockData data = blockObject.GetComponent<Block>().data;
-            if (gridManager.IsAnyMovePossible(data))
+            Block data = blockObject.GetComponent<Block>();
+            if (gridManager.IsAnyMovePossible(data.currentShapeCells))
             {
                 return false;
             }

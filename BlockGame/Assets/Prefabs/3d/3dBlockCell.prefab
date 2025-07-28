@@ -105,7 +105,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7745422584643987635}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27c20c55ec1b5774193813654e4e2c88, type: 3}
   m_Name: 
@@ -126,3 +126,6 @@ MonoBehaviour:
   blockBasePrefab: {fileID: 8213470618996796906, guid: 083e3c8a3b6c29e4aa4396d68db03d92, type: 3}
   blockCellPrefab: {fileID: 7745422584643987635}
   ghostMaterial: {fileID: 2100000, guid: c99ef530df00a2f49b99fb3ddfd5c4cd, type: 2}
+  doubleClickTimeCounter: 0
+  doubleClickCounter: 0
+  rotate: 0

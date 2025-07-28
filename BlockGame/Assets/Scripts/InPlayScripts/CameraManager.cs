@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    float startfov=70f;
+    float startfov=75f;
     float startheight=16;
     float startwidth=9;
     private void Start()

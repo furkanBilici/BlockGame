@@ -1,5 +1,6 @@
 // BlockDragger.cs (Nihai ve Düzeltilmiþ Versiyon)
 
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class BlockDragger : MonoBehaviour
@@ -16,9 +17,6 @@ public class BlockDragger : MonoBehaviour
     private int dragPlaneLayerMask;
     private GameObject ghostBlock;
 
-    // Sabitler daha okunaklý yapar
-    private const int DRAGGING_SORTING_ORDER = 10;
-    private const int PLACED_SORTING_ORDER = 0;
 
     Vector3 offsetForZ = new Vector3(0, 2f,-0.8f);
 
@@ -33,34 +31,57 @@ public class BlockDragger : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        blockParent = transform.parent;
+        blockParent = transform;
         gridManager = FindFirstObjectByType<GridManager>();
         dragPlaneLayerMask = LayerMask.GetMask("DragPlane");
+    }
+    private void FixedUpdate()
+    {
+        
+        doubleClickTimeCounter += Time.deltaTime;
+        if (doubleClickTimeCounter >= 0.5)
+        {
+            doubleClickCounter = 0;
+            doubleClickTimeCounter = 0;
+        }
     }
     private void Start()
     {
         ghostMpb=new MaterialPropertyBlock();
     }
+    public float doubleClickTimeCounter=0;
+    public float doubleClickCounter = 0;
+    public bool rotate = false;
     void OnMouseDown()
     {
         if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
-        isDragging = true;
-        blockColor = blockParent.GetComponentInChildren<Block>().color;
-
-        GhostBlockCreator();
-        Vector3? hitPoint = GetMouseWorldPositionOnPlane();
-        initialPosition = blockParent.position;
-        if (hitPoint.HasValue)
+        doubleClickCounter++;
+        if (doubleClickCounter >= 2)
         {
-            offset = blockParent.position - (hitPoint.Value);
+            rotate = true;
+        }
+        if (rotate)
+        {
+            RotateBlock();
+        }
+        else
+        {
+            isDragging = true;
+            blockColor = blockParent.GetComponentInChildren<Block>().color;
+
+            GhostBlockCreator();
+            Vector3? hitPoint = GetMouseWorldPositionOnPlane();
+            initialPosition = blockParent.position;
+            if (hitPoint.HasValue)
+            {
+                offset = blockParent.position - (hitPoint.Value);
+            }
         }
     }
-
     void OnMouseDrag()
     {
         if (!isDragging || UIManager.Instance.panelActive) return;
-
         Vector3? hitPoint = GetMouseWorldPositionOnPlane();
         if (hitPoint.HasValue)
         {
@@ -71,14 +92,14 @@ public class BlockDragger : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (!isDragging || UIManager.Instance.panelActive) return;        
+        if (!isDragging || UIManager.Instance.panelActive) return;
         Destroy(ghostBlock);
         gridManager.ResetGridColors();
         isDragging = false;
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
         Block block = blockParent.GetComponent<Block>();
 
-        if (gridManager.CanPlaceBlock(block.data, gridPos))
+        if (gridManager.CanPlaceBlock(block.currentShapeCells, gridPos))
         {
             if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
             // Yerleþtirme baþarýlý
@@ -101,10 +122,7 @@ public class BlockDragger : MonoBehaviour
 
     private void SetAsPlaced()
     {
-        foreach (var dragger in blockParent.GetComponentsInChildren<BlockDragger>())
-        {
-            dragger.isPlaced = true;
-        }
+        isPlaced = true;
         
     }
 
@@ -133,16 +151,12 @@ public class BlockDragger : MonoBehaviour
         Block block = blockParent.GetComponent<Block>();
         Vector2Int gridPos = new Vector2Int(Mathf.RoundToInt(blockParent.position.x), Mathf.RoundToInt(blockParent.position.y));
 
-        if (gridManager.CanPlaceBlock(block.data, gridPos))
+        if (gridManager.CanPlaceBlock(block.currentShapeCells, gridPos))
         {
             ghostBlock.transform.position = new Vector3(gridPos.x, gridPos.y, 0); // Z pozisyonu 0'da
             ghostBlock.SetActive(true);
 
-            foreach (Renderer renderer in ghostBlock.GetComponentsInChildren<Renderer>())
-            {
-                renderer.SetPropertyBlock(ghostMpb);
-            }
-            var completedLines = gridManager.SimulateLineCompletion(block.data, gridPos);
+            var completedLines = gridManager.SimulateLineCompletion(block.currentShapeCells, gridPos);
             if (completedLines.rows.Count > 0 || completedLines.cols.Count > 0)
             {
 
@@ -164,16 +178,28 @@ public class BlockDragger : MonoBehaviour
     {
         ghostBlock = Instantiate(blockBasePrefab);
         ghostBlock.name = "GhostBlock";
-
-        BlockData data = blockParent.GetComponent<Block>().data;
-
-        foreach (Vector2Int cellPos in data.cells)
+        Block block = blockParent.GetComponent<Block>();
+        ghostMpb.SetColor("_BaseColor",ghostBlockColor);
+        foreach (Vector2Int cellPos in block.currentShapeCells)
         {
            GameObject cell = Instantiate(blockCellPrefab, ghostBlock.transform);
            cell.transform.localPosition = (Vector2)cellPos;
 
-            cell.GetComponent<Renderer>().material = ghostMaterial;
+           cell.GetComponent<Renderer>().SetPropertyBlock(ghostMpb);
         }
         ghostBlock.SetActive(false);
+    }
+    void RotateBlock()
+    {
+        if(BlockRotateData.Instance != null)
+        {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("RotateBlock");
+            blockParent.GetComponent<Block>().RotateCells();
+            rotate=false;
+        }
+        else
+        {
+            rotate = false;
+        }
     }
 }

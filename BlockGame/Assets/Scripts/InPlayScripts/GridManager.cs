@@ -62,8 +62,8 @@ public class GridManager : MonoBehaviour
     public void PlaceBlock(GameObject blockObject, Vector2Int gridPosition)
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("PutBlock");
-        BlockData blockData = blockObject.GetComponent<Block>().data;
-        foreach (Vector2Int cellOffset in blockData.cells)
+        Block blockData = blockObject.GetComponent<Block>();
+        foreach (Vector2Int cellOffset in blockData.currentShapeCells)
         {
             Vector2Int targetPos = gridPosition + cellOffset;
             foreach (Transform childCell in blockObject.transform)
@@ -212,11 +212,11 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public bool CanPlaceBlock(BlockData blockData, Vector2Int gridPosition)
+    public bool CanPlaceBlock(List<Vector2Int> blocks, Vector2Int gridPosition)
     {
         if (isClearing) return false;
 
-        foreach (Vector2Int cellOffset in blockData.cells)
+        foreach (Vector2Int cellOffset in blocks)
         {
             Vector2Int pos = gridPosition + cellOffset;
             if (!IsWithinGrid(pos.x, pos.y) || IsCellOccupied(pos.x, pos.y))
@@ -229,13 +229,13 @@ public class GridManager : MonoBehaviour
 
     public bool IsWithinGrid(int x, int y) { return (x >= 0 && x < width && y >= 0 && y < height); }
     public bool IsCellOccupied(int x, int y) { return logicGrid[x, y] != null; }
-    public bool IsAnyMovePossible(BlockData blockData)
+    public bool IsAnyMovePossible(List<Vector2Int> block)
     {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                if (CanPlaceBlock(blockData, new Vector2Int(x, y)))
+                if (CanPlaceBlock(block, new Vector2Int(x, y)))
                 {
                     return true;
                 }
@@ -328,10 +328,10 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-    public (List<int> rows, List<int> cols) SimulateLineCompletion(BlockData blockData, Vector2Int gridPosition)
+    public (List<int> rows, List<int> cols) SimulateLineCompletion(List<Vector2Int> blockData, Vector2Int gridPosition)
     {
         Transform[,] simulatedGrid = (Transform[,])logicGrid.Clone();
-        foreach (var cellOffset in blockData.cells)
+        foreach (var cellOffset in blockData)
         {
             Vector2Int pos = gridPosition + cellOffset;
             if (IsWithinGrid(pos.x, pos.y))
@@ -396,7 +396,7 @@ public class GridManager : MonoBehaviour
             Vector2Int randomPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
 
             // 3. Bloðun oraya yerleþip yerleþemeyeceðini kontrol et
-            if (CanPlaceBlock(randomBlockData, randomPosition))
+            if (CanPlaceBlock(randomBlockData.cells, randomPosition))
             {
                 // 4. Yerleþebiliyorsa, yerleþtir.
                 // Bu, oyun baþýnda olduðu için animasyon veya ses istemiyoruz.

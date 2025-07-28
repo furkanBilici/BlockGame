@@ -1,10 +1,34 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Block : MonoBehaviour
 {
     public BlockData data;
     public Color color;
+    public List<Vector2Int> currentShapeCells;
+    private void Start()
+    {
+       if(data!=null) currentShapeCells = new List<Vector2Int>(data.cells);
+    }
+    public void RotateCells()
+    {
+        if (BlockRotateData.Instance != null)
+        {
+            currentShapeCells = BlockRotateData.Instance.RotateBlockDataCells(currentShapeCells);
+            UpdateBlockPos();
+        }
+    }
+    void UpdateBlockPos()
+    {
+        int i = 0;
+        foreach (Transform child in transform)
+        {
+            child.localPosition = new Vector3(currentShapeCells[i].x, currentShapeCells[i].y,child.position.z);
+            i ++;
+        }
+    }
     public void AnimationPlacement()
     {
         StartCoroutine(PlacementAnimationRoutine());
