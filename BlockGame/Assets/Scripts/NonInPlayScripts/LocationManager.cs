@@ -12,7 +12,7 @@ public class LocationManager : MonoBehaviour
     public static LocationManager Instance;
     //private const string IP_API_URL = "https://ip-api.com/json";
     private const string IP_API_URL = "https://ipinfo.io/json";
-    private const string LAST_CHECK_TIME_KEY = "LastLocationCheckTime";
+    private const string LAST_CHECK_TIME_KEY = "LastLocationCheckTimeNew";
     private const string PLAYER_LOCATION_FILENAME = "player_location.json";
 
     public string countryCode = "XX";

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using LootLocker.LootLockerEnums;
 using LootLocker.Requests;
 using System;
@@ -297,6 +298,17 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI highscoreTitle;
 
     private const string LEADERBOARD_KEY = "global_high_scores";
+    public void NoConnectionPanel()
+    {
+        if (noConnectionPanel.activeSelf)
+        {
+            noConnectionPanel.SetActive(false);
+        }
+        else
+        {
+            noConnectionPanel.SetActive(true);
+        }
+    }
     public void ShowHighScoreBoardPanel(int listType)
     {
         if ((HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf) && !(listType==1 || listType==2|| listType==0))
@@ -313,6 +325,7 @@ public class MainMenuManager : MonoBehaviour
             noConnectionPanel.SetActive(true);
             return;
         }
+        
        
         HighscoreBoardPanel.SetActive(true);
         foreach (Transform child in scoreContentParent.transform) Destroy(child.gameObject);
@@ -467,7 +480,43 @@ public class MainMenuManager : MonoBehaviour
         int highScore = PlayerPrefs.GetInt("HighestScore",-1);
         if (Application.internetReachability != NetworkReachability.NotReachable && highScore!=-1)
         {
-            if (LootLockerManager.Instance != null) LootLockerManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
+            if (LootLockerManager.Instance != null)
+            {
+                LootLockerManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
+            }
         }
+    }
+
+    [Header("CreditPanel")]
+    [SerializeField] private GameObject creditPanel;
+    [SerializeField] private GameObject creditText;
+
+    public void CreditPanelOpen()
+    {
+        if (creditPanel.activeSelf)
+        {
+            creditPanel.SetActive(false);
+        }
+        else
+        {
+            creditPanel.SetActive(true);
+            StartCoroutine(CreditTextPanel());
+        }
+    }
+    System.Collections.IEnumerator CreditTextPanel()
+    {
+        Vector3 startPos = new Vector3(creditText.transform.position.x, 0, 0);
+        creditText.transform.position = startPos;
+        Vector3 targetPos = new Vector3(creditText.transform.position.x,creditText.transform.position.y+3000,creditText.transform.position.z);
+        float timer = 0;
+        float duration = 20f;
+        while (timer < duration)
+        {
+            creditText.transform.position = Vector3.Lerp(startPos, targetPos, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        yield return new WaitForSeconds(1f);
+        creditPanel.SetActive(false);
     }
 }
