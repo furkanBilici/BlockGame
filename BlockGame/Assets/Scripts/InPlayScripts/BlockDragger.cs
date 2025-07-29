@@ -1,6 +1,3 @@
-// BlockDragger.cs (Nihai ve Düzeltilmiþ Versiyon)
-
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class BlockDragger : MonoBehaviour

@@ -519,4 +519,93 @@ public class MainMenuManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         creditPanel.SetActive(false);
     }
+
+    [Header("How to Play")]
+    [SerializeField] private GameObject howToPlayPanel;
+    [SerializeField] private GameObject first, second, third, fourth, fifth;
+    [SerializeField ]private GameObject previousButton;
+    [SerializeField] private GameObject nextButton;
+    
+    int howtoplayIndex = 0;
+
+    public void HowToPlayPanelButton()
+    {
+        howtoplayIndex = 1;
+        if (howToPlayPanel.activeSelf)
+        {
+            howToPlayPanel.SetActive(false);
+            return;
+        }
+        howToPlayPanel.SetActive(true);
+        first.SetActive(true);
+        previousButton.SetActive(false);
+    }
+    public void HowToPlayNextButton()
+    {
+        nextButton.SetActive(true);
+        previousButton.SetActive(true);
+        howtoplayIndex++;
+        if (howtoplayIndex >= 5)
+        {
+            howtoplayIndex = 5;
+            nextButton.SetActive(false);
+        }
+        ShowHowToPlayPage(howtoplayIndex);
+
+    }
+    public void HowToPlayPreviousButton()
+    {
+        nextButton.SetActive(true);
+        previousButton.SetActive(true);
+        howtoplayIndex--;
+        if (howtoplayIndex <= 1)
+        {
+            howtoplayIndex = 1;
+            previousButton.SetActive(false);
+        }
+        ShowHowToPlayPage(howtoplayIndex);
+    }
+    void ShowHowToPlayPage(int i)
+    {
+        if (i == 1)
+        {
+            first.SetActive(true);
+            second.SetActive(false);
+            third.SetActive(false);
+            fourth.SetActive(false);
+            fifth.SetActive(false);
+        }
+        else if (i == 2)
+        {
+            first.SetActive(false);
+            second.SetActive(true);
+            third.SetActive(false);
+            fourth.SetActive(false);
+            fifth.SetActive(false);
+        }
+        else if (i == 3)
+        {
+            first.SetActive(false);
+            second.SetActive(false);
+            third.SetActive(true);
+            fourth.SetActive(false);
+            fifth.SetActive(false);
+        }
+        else if (i == 4)
+        {
+            first.SetActive(false);
+            second.SetActive(false);
+            third.SetActive(false);
+            fourth.SetActive(true);
+            fifth.SetActive(false);
+        }
+        else if (i == 5)
+        {
+            first.SetActive(false);
+            second.SetActive(false);
+            third.SetActive(false);
+            fourth.SetActive(false);
+            fifth.SetActive(true);
+        }
+    }
 }
