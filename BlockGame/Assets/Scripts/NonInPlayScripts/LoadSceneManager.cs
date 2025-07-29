@@ -8,11 +8,17 @@ public class LoadSceneManager : MonoBehaviour
     [Header("UI things")]
     [SerializeField] private Slider progressBar;
     [SerializeField] private string sceneToLoad = "MainMenu";
+
+   
     private void Start()
     {
-        StartCoroutine(LoadingSceneAsync());
+        if (PlayerPrefs.GetInt("termsofusage", 0) == 1 && PlayerPrefs.GetInt("privacypolicy", 0) == 1)
+        {
+            StartCoroutine(LoadingSceneAsync());
+            return;
+        }     
     }
-    IEnumerator LoadingSceneAsync()
+    public IEnumerator LoadingSceneAsync()
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
         operation.allowSceneActivation = false;
