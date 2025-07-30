@@ -183,7 +183,7 @@ public class MainMenuManager : MonoBehaviour
     {
         int level = PlayerPrefs.GetInt("CompletedLevels", 0) + 1;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
-        PlayerPrefs.SetInt("TimedGameScore", neededScore * level* (int)MathF.Sqrt(level));
+        PlayerPrefs.SetInt("TimedGameScore", (int)(neededScore * level* MathF.Sqrt(level)));
         PlayerPrefs.SetFloat("TimedGameTime", time * level);
         SceneManager.LoadScene(3);
     }
@@ -538,6 +538,11 @@ public class MainMenuManager : MonoBehaviour
         }
         howToPlayPanel.SetActive(true);
         first.SetActive(true);
+        second.SetActive(false);
+        third.SetActive(false);
+        fourth.SetActive(false);
+        fifth.SetActive(false);
+        nextButton.SetActive(true);
         previousButton.SetActive(false);
     }
     public void HowToPlayNextButton()

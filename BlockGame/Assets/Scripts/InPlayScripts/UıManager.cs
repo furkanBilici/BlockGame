@@ -1,5 +1,6 @@
 
 using GoogleMobileAds.Api.AdManager;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -149,5 +150,16 @@ public class UIManager : MonoBehaviour
 
         // Reklamý göstermesi için AdsManager'ý çaðýr.
         AdsManager.Instance.ShowRewardedAd();
+    }
+    public void NextTimedLevel()
+    {
+        int neededScore=20;
+        float time=25;
+        int level = PlayerPrefs.GetInt("CompletedLevels", 0) + 1;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+        PlayerPrefs.SetInt("TimedGameScore", (int)(neededScore * level * MathF.Sqrt(level)));
+        PlayerPrefs.SetFloat("TimedGameTime", time * level);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(3);
     }
 }
