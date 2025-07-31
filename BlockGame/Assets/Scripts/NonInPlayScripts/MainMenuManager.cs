@@ -459,6 +459,7 @@ public class MainMenuManager : MonoBehaviour
                 LootLockerManager.Instance.SetPlayerName(playerName);
                 setNamePanel.SetActive(false);
                 welcomText.text = "WELCOME: " + playerName;
+                HowToPlayPanelButton();
             }
         });
     }

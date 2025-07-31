@@ -41,18 +41,15 @@ public class BlockDragger : MonoBehaviour
     {
         if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
-        else
-        {
-            isDragging = true;
-            blockColor = blockParent.GetComponentInChildren<Block>().color;
+        isDragging = true;
+        blockColor = blockParent.GetComponentInChildren<Block>().color;
 
-            GhostBlockCreator();
-            Vector3? hitPoint = GetMouseWorldPositionOnPlane();
-            initialPosition = blockParent.position;
-            if (hitPoint.HasValue)
-            {
-                offset = blockParent.position - (hitPoint.Value);
-            }
+        GhostBlockCreator();
+        Vector3? hitPoint = GetMouseWorldPositionOnPlane();
+        initialPosition = blockParent.position;
+        if (hitPoint.HasValue)
+        {
+            offset = blockParent.position - (hitPoint.Value);
         }
     }
     void OnMouseDrag()

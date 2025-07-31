@@ -35,7 +35,7 @@ public class BlockSpawner : MonoBehaviour
         mpbBlock = new MaterialPropertyBlock();
         SpawnNewBlockSet();
     }
-
+    int tries = 10;
     public void SpawnNewBlockSet()
     {
         activeBlocks.Clear();
@@ -45,13 +45,37 @@ public class BlockSpawner : MonoBehaviour
         }
 
         bool foundValidSet = false;
-
+        int score = ScoreManager.Instance.GetCurrentScore();
         for (int attempt = 0; attempt < maxSpawnAttempts; attempt++)
         {
             List<BlockData> candidateData = new List<BlockData>();
             for (int i = 0; i < spawnPositions.Count; i++)
             {
-                candidateData.Add(GetRandomBlockData());
+                BlockData blockD = GetRandomBlockData();
+                for (int j = 0; j < tries; j++) {
+                    int blockCount=blockD.cells.Count;
+                    if (score < 40 && blockCount <= 2)
+                    {
+                        break;
+                    }
+                    else if (score < 80 && blockCount <= 3 && blockCount>1)
+                    {
+                        break;
+                    }
+                    else if(score < 150 && blockD.cells.Count <= 5 && blockCount > 2)
+                    {
+                        break;
+                    }
+                    else if (score > 150 && blockD.cells.Count >= 4)
+                    {
+                        break;
+                    }
+                    else 
+                    {
+                        blockD = GetRandomBlockData();
+                    }
+                }
+                candidateData.Add(blockD);
             }
 
             bool isSetValid = false;

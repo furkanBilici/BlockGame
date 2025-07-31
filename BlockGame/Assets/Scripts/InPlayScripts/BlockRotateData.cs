@@ -33,18 +33,22 @@ public class BlockRotateData : MonoBehaviour
     }
     public void RotateBlock(int i)
     {
+        
         foreach (Block block in spawnPointParent.GetComponentsInChildren<Block>()) 
         {
             if (block.transform.localPosition.x < 0 && i==0)
             {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("BlockRotateSound");
                 block.RotateCells();
             }
             else if(i==1 && block.transform.localPosition.x == 0)
             {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("BlockRotateSound");
                 block.RotateCells();
             }
             else if (i == 2 && block.transform.localPosition.x > 0)
             {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("BlockRotateSound");
                 block.RotateCells();
             }
         }
