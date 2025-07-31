@@ -32,36 +32,15 @@ public class BlockDragger : MonoBehaviour
         gridManager = FindFirstObjectByType<GridManager>();
         dragPlaneLayerMask = LayerMask.GetMask("DragPlane");
     }
-    private void FixedUpdate()
-    {
-        
-        doubleClickTimeCounter += Time.deltaTime;
-        if (doubleClickTimeCounter >= 0.5)
-        {
-            doubleClickCounter = 0;
-            doubleClickTimeCounter = 0;
-        }
-    }
     private void Start()
     {
         ghostMpb=new MaterialPropertyBlock();
     }
-    public float doubleClickTimeCounter=0;
-    public float doubleClickCounter = 0;
     public bool rotate = false;
     void OnMouseDown()
     {
         if (isPlaced || UIManager.Instance.panelActive) return;
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("HoldBlock");
-        doubleClickCounter++;
-        if (doubleClickCounter >= 2)
-        {
-            rotate = true;
-        }
-        if (rotate)
-        {
-            RotateBlock();
-        }
         else
         {
             isDragging = true;
@@ -185,18 +164,5 @@ public class BlockDragger : MonoBehaviour
            cell.GetComponent<Renderer>().SetPropertyBlock(ghostMpb);
         }
         ghostBlock.SetActive(false);
-    }
-    void RotateBlock()
-    {
-        if(BlockRotateData.Instance != null)
-        {
-            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("RotateBlock");
-            blockParent.GetComponent<Block>().RotateCells();
-            rotate=false;
-        }
-        else
-        {
-            rotate = false;
-        }
     }
 }

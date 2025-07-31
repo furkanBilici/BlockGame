@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 public class BlockRotateData : MonoBehaviour
 {
     public static BlockRotateData Instance {  get; private set; }
+    [SerializeField] private GameObject spawnPointParent;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -30,5 +31,22 @@ public class BlockRotateData : MonoBehaviour
         Vector2Int cell2= new Vector2Int(cell.y,-cell.x);
         return cell2;
     }
-
+    public void RotateBlock(int i)
+    {
+        foreach (Block block in spawnPointParent.GetComponentsInChildren<Block>()) 
+        {
+            if (block.transform.localPosition.x < 0 && i==0)
+            {
+                block.RotateCells();
+            }
+            else if(i==1 && block.transform.localPosition.x == 0)
+            {
+                block.RotateCells();
+            }
+            else if (i == 2 && block.transform.localPosition.x > 0)
+            {
+                block.RotateCells();
+            }
+        }
+    }
 }
