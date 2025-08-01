@@ -780,7 +780,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: CleanLineSound
     volume: 0.5
-    clip: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+    clip: {fileID: 8300000, guid: 1d74880bed4586644a16a79a2d9dc8af, type: 3}
     source: {fileID: 0}
   - name: CannotPutBlock
     volume: 0.5
@@ -9232,12 +9232,13 @@ MonoBehaviour:
     Models & Materials:\r\n\"Low Poly Wood Pack \u2013 Stylized Wooden Models\" by
     MyUniverse Studio (via Unity Asset Store)\r\n\"Low-Poly Simple Nature Pack\"
     by JustCreate (via Unity Asset Store)\r\n\"Sparrow - Quirky Series\" by Omabuarts
-    Studio (via Unity Asset Store)\r\n\r\n\r\n-MUSIC & SOUND-\r\nOriginal Music:\r\n\"8bit
-    Music-062022\" by GWriterStudio\r\nSound Effects:\r\n\"RPG Essentials Sound Effects\"
-    by leohpaz\r\n\"FREE UI Click Sound Pack\" from SwishSwoosh\r\n\r\n\r\n-TECHNOLOGY
-    & SPECIAL THANKS-\r\nGame Engine:\r\nUnity Engine\r\nBackend & Online Services:\r\nLeaderboards
-    & Player Data by LootLocker\r\nIP Geolocation by ipinfo.com\r\n\r\n\r\n-QUALITY
-    ASSURANCE & TESTING-\r\nSpecial Thanks To Our Testers:\r\n-Kedy\r\n-lale\r\n-Adembey27\r\n\r\n\r\n\xA9
+    Studio (via Unity Asset Store)\n\"Cartoon FX Remaster Free\" by Jean Moreno (via
+    Unity Asset Store)\r\n\r\n\r\n-MUSIC & SOUND-\r\nOriginal Music:\r\n\"8bit Music-062022\"
+    by GWriterStudio\r\nSound Effects:\r\n\"RPG Essentials Sound Effects\" by leohpaz\r\n\"FREE
+    UI Click Sound Pack\" from SwishSwoosh\r\n\r\n\r\n-TECHNOLOGY & SPECIAL THANKS-\r\nGame
+    Engine:\r\nUnity Engine\r\nBackend & Online Services:\r\nLeaderboards & Player
+    Data by LootLocker\r\nIP Geolocation by ipinfo.com\r\n\r\n\r\n-QUALITY ASSURANCE
+    & TESTING-\r\nSpecial Thanks To Our Testers:\r\n-Kedy\r\n-lale\r\n-Adembey27\r\n\r\n\r\n\xA9
     2025 MAVERIA. All Rights Reserved.\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

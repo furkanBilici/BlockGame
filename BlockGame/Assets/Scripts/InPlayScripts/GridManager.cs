@@ -113,7 +113,8 @@ public class GridManager : MonoBehaviour
         }
         return (completedRows, completedCols);
     }
-
+    [Header("Görsel Efektler")]
+    [SerializeField] private GameObject lineClearEffectPrefab;
     private IEnumerator ClearLinesRoutine(List<int> rows, List<int> cols)
     {
         isClearing = true;
@@ -147,6 +148,18 @@ public class GridManager : MonoBehaviour
                     }
                     if (birdAnimator != null) birdAnimator.Play("Spin");
                     cellsToClear.Add(logicGrid[x, y]);
+                }
+            }
+        }
+        if (lineClearEffectPrefab != null)
+        {
+            foreach (Transform cell in cellsToClear)
+            {
+                if (cell != null)
+                {
+                    // Efekt prefab'ýný, hücrenin pozisyonunda oluþtur.
+                    // Efektin kendisi bir süre sonra kendini yok etmelidir.
+                    Instantiate(lineClearEffectPrefab, cell.position, Quaternion.identity);
                 }
             }
         }
@@ -231,11 +244,33 @@ public class GridManager : MonoBehaviour
     public bool IsCellOccupied(int x, int y) { return logicGrid[x, y] != null; }
     public bool IsAnyMovePossible(List<Vector2Int> block)
     {
+        List<Vector2Int> blockType2 = new List<Vector2Int>();
+        List<Vector2Int> blockType3 = new List<Vector2Int>();
+        List<Vector2Int> blockType4 = new List<Vector2Int>();
+        
+        for (int i = 0; i < block.Count; i++)
+        {
+            blockType2.Add(new Vector2Int(block[i].y, -block[i].x)) ;
+            blockType3.Add(new Vector2Int(blockType2[i].y, -blockType2[i].x));
+            blockType4.Add(new Vector2Int(blockType3[i].y, -blockType3[i].x));
+        }
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 if (CanPlaceBlock(block, new Vector2Int(x, y)))
+                {
+                    return true;
+                }
+                if (CanPlaceBlock(blockType2, new Vector2Int(x, y)))
+                {
+                    return true;
+                }
+                if (CanPlaceBlock(blockType3, new Vector2Int(x, y)))
+                {
+                    return true;
+                }
+                if (CanPlaceBlock(blockType4, new Vector2Int(x, y)))
                 {
                     return true;
                 }
