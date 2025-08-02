@@ -30,7 +30,6 @@ public class MainMenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            AudioManager.Instance.PlaySFX("ButtonClick");
             if (quitPanel.activeSelf)
             {
                 quitPanel.SetActive(false);
@@ -62,7 +61,6 @@ public class MainMenuManager : MonoBehaviour
     }
     public void StartGame()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         SceneManager.LoadScene(2);
     }
     public void QuitGame()//oyundan çýkýþ butonu (2 butonda kullanýlacak)
@@ -72,7 +70,6 @@ public class MainMenuManager : MonoBehaviour
     }
     public void BackToMenu()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         quitPanel.SetActive(false);
         settingPanel.SetActive(false);
     }
@@ -95,12 +92,10 @@ public class MainMenuManager : MonoBehaviour
     }
     public void Settings()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         settingPanel.SetActive(true);
     }
     public void CloseSound()
-    {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+    { 
         AudioManager.Instance.closeSounds = !AudioManager.Instance.closeSounds;
         SoundButtonControl();
     }
@@ -123,7 +118,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseMusic()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         AudioManager.Instance.closeMusics = !AudioManager.Instance.closeMusics;
         MusicButtonControl();
     }
@@ -149,7 +143,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void ModePanelControl()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         if (modePanelBool)
         {
             modePanelBool = false;
@@ -182,7 +175,6 @@ public class MainMenuManager : MonoBehaviour
     public void StartTimedGame()
     {
         int level = PlayerPrefs.GetInt("CompletedLevels", 0) + 1;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         PlayerPrefs.SetInt("TimedGameScore", (int)(neededScore * level* MathF.Sqrt(level)));
         PlayerPrefs.SetFloat("TimedGameTime", time * level);
         SceneManager.LoadScene(3);
@@ -194,7 +186,6 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] int difficulty = 0;//0=easy, 1 normal, 2=hard
     public void CustomModePanel()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         if (customModePanelBool)
         {
             customModePanelBool = false;
@@ -281,11 +272,13 @@ public class MainMenuManager : MonoBehaviour
     }
     public void PlayCustomMode()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         SceneManager.LoadScene(4);
     }
 
-
+    public void ButtonClickSound()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+    }
 
 
 

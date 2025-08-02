@@ -88,7 +88,6 @@ public class UIManager : MonoBehaviour
 
     public void RestartGame()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         panelActive=false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -105,7 +104,6 @@ public class UIManager : MonoBehaviour
     }
     public void StopGame()
     {
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         if (!panelActive) {
             panelActive = true;
             continueButton.SetActive(true);
@@ -119,9 +117,12 @@ public class UIManager : MonoBehaviour
         }
         
     }
-    public void Continue()
+    public void ButtonClickSound()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
+    }
+    public void Continue()
+    {
         panelActive = false;
         panel.SetActive(false);
         continueButton.SetActive(false);
@@ -156,7 +157,6 @@ public class UIManager : MonoBehaviour
         int neededScore=20;
         float time=25;
         int level = PlayerPrefs.GetInt("CompletedLevels", 0) + 1;
-        if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX("ButtonClick");
         PlayerPrefs.SetInt("TimedGameScore", (int)(neededScore * level * MathF.Sqrt(level)));
         PlayerPrefs.SetFloat("TimedGameTime", time * level);
         PlayerPrefs.Save();

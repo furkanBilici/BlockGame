@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UiText Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UiText
+  m_TableCollectionNameGuidString: bf378fa84708acc49b3757bb27fd8a32
+  m_Entries:
+  - m_Id: 14329745408
+    m_Key: loading_scene_loading_text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 414306963456
+    m_Key: loading_scene_tos_pp_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1632915853312
+    m_Key: loading_scene_tos_pp_ihaveread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2033769680896
+    m_Key: loading_scene_pp_button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2210328907776
+    m_Key: loading_scene_tos_button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2810881937408
+    m_Key: loading_scene_needtoaccept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3131356123136
+    m_Key: loading_scene_playgame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3483161759744
+    m_Key: loading_scene_PP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3893658292224
+    m_Key: loading_scene_EULA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4688814444544
+    m_Key: playButton_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4863997939712
+    m_Key: leaderBoard_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5083703971840
+    m_Key: settings_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5276742619136
+    m_Key: quit_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5491239325696
+    m_Key: credits_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6075912720384
+    m_Key: quitSureText_mainmenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6349452644352
+    m_Key: back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6725711073280
+    m_Key: sounds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6776797696000
+    m_Key: musics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7160953999360
+    m_Key: classicMode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7276934893568
+    m_Key: timedChallenges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7439543865344
+    m_Key: customModes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8123987169280
+    m_Key: sizeCustomGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8191590961152
+    m_Key: difficultyCustomGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8630965276672
+    m_Key: enter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8677786292224
+    m_Key: enterUserName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9276921647104
+    m_Key: noconnection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9475144454144
+    m_Key: myCountryLeaderBoard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9807584989184
+    m_Key: myCityLeaderBoard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11369296334848
+    m_Key: creditPanel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12024933158912
+    m_Key: first1_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12366940901376
+    m_Key: second1_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12682700689408
+    m_Key: third1_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12917762068480
+    m_Key: fourth1_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13078206779392
+    m_Key: fourth2_howtolay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13560966975488
+    m_Key: fifth1_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695469916160
+    m_Key: fifth2_howtoplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14528844566528
+    m_Key: restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14625674268672
+    m_Key: continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15020123394048
+    m_Key: mainmenuButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15235807088640
+    m_Key: gameOver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16838731665408
+    m_Key: reachBeforeTimeEnds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17288285556736
+    m_Key: youWin
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 8534745764887265594
+  references:
+    version: 2
+    RefIds:
+    - rid: 8534745764887265594
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1754150964128

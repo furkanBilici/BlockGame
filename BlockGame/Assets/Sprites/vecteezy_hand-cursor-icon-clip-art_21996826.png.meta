@@ -186,7 +186,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      vecteezy_hand-cursor-icon-clip-art_21996826_0: -1283768089897736119
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

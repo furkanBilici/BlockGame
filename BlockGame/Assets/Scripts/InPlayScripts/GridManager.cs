@@ -10,7 +10,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int height = 8;
     [SerializeField] private GameObject gridCellPrefab;
 
-    [SerializeField] private Animator birdAnimator;
+    public Animator birdAnimator;
 
     private Transform[,] logicGrid;
     private bool isClearing = false;
@@ -157,8 +157,6 @@ public class GridManager : MonoBehaviour
             {
                 if (cell != null)
                 {
-                    // Efekt prefab'ýný, hücrenin pozisyonunda oluþtur.
-                    // Efektin kendisi bir süre sonra kendini yok etmelidir.
                     Instantiate(lineClearEffectPrefab, cell.position, Quaternion.identity);
                 }
             }
@@ -401,24 +399,14 @@ public class GridManager : MonoBehaviour
             logicGrid[position.x, position.y].name = name;
         }
     }
-
-    [Header("Baþlangýç Bloklarý Ayarlarý")]
-    [Tooltip("Oyun baþýnda grid'in yaklaþýk yüzde kaçýnýn dolacaðýný belirtir.")]
-    [Range(0f, 0.5f)]
-    //[SerializeField] private float initialFillPercentages = 0.2f; // %20
-    //[SerializeField] private int maxPlacementTriess = 50; // sonsuz döngüyü önlemek için deneme sayýsý
-    [SerializeField] private Material startBlocksMaterial;
-
     public void GenerateInitialBlocks(float initialFillPercentage, int maxPlacementTries)
     {
         if (initialFillPercentage <= 0) return;
-        // Toplam hücre sayýsýna göre kaç hücre dolduracaðýmýzý hesapla
+      
         int totalCells = width * height;
         int cellsToFill = Mathf.RoundToInt(totalCells * initialFillPercentage);
         int cellsFilled = 0;
         int tries = 0;
-
-        // Belirlediðimiz sayýda hücreyi doldurana veya deneme hakkýmýz bitene kadar devam et
         while (cellsFilled < cellsToFill && tries < maxPlacementTries)
         {
             tries++;

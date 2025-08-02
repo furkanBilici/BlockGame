@@ -16,16 +16,16 @@ MonoBehaviour:
   adminToken: 69e8f57befc1bb19ec813801fbc0e1499fb312f6
   token: 
   refreshToken: 
-  domainKey: n1ubme4b
+  domainKey: 
   game_version: 1.0.0.0
   sdk_version: 5.2.0
   deviceID: defaultPlayerId
   playerULID: 
   url: https://api.lootlocker.com/v1
-  adminUrl: https://n1ubme4b.api.lootlocker.com/admin
-  playerUrl: https://n1ubme4b.api.lootlocker.com/player
-  userUrl: https://n1ubme4b.api.lootlocker.com/game
-  baseUrl: https://n1ubme4b.api.lootlocker.com
+  adminUrl: https://api.lootlocker.com/admin
+  playerUrl: https://api.lootlocker.com/player
+  userUrl: https://api.lootlocker.com/game
+  baseUrl: https://api.lootlocker.com
   clientSideRequestTimeOut: 180
   currentDebugLevel: 0
   logLevel: 2

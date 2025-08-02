@@ -336,7 +336,14 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_0: -7455916226258105010
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_1: -1849191804131172044
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_2: -8098830108385731868
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_3: -6573469937341843202
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_4: -8585829414619602290
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_5: 8292765684116000091
+      pngtree-cursor-hand-icon-mouse-png-image_10948680_6: 1592996965165066174
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

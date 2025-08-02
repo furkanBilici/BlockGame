@@ -1,0 +1,264 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UiText_tr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: tr
+  m_SharedData: {fileID: 11400000, guid: bf378fa84708acc49b3757bb27fd8a32, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 14329745408
+    m_Localized: "Y\xDCKLEN\u0130YOR..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 414306963456
+    m_Localized: "Hizmet \u015Eartlar\u0131\r\n&\r\nGizlilik Politikas\u0131"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1632915853312
+    m_Localized: Bunu okudum ve kabul ediyorum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2033769680896
+    m_Localized: "G\u0130ZL\u0130L\u0130K POL\u0130T\u0130KASI"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2210328907776
+    m_Localized: "EULA\n(SON KULLANICI L\u0130SANS S\xD6ZLE\u015EMES\u0130)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2810881937408
+    m_Localized: "\r\nOyunu oynayabilmeniz i\xE7in Gizlilik Politikas\u0131 ve Son
+      Kullan\u0131c\u0131 Lisans S\xF6zle\u015Fmesi'ni (EULA) kabul etmeniz gerekmektedir."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3131356123136
+    m_Localized: OYNAMAYA DEVAM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3483161759744
+    m_Localized: "Gizlilik Politikas\u0131\r\nSon G\xFCncelleme Tarihi: 29/07/2025\r\n\r\nMaveria
+      (\u201Cbiz\u201D, \u201Cbizim\u201D veya \u2018bize\u2019) Block Rush mobil
+      uygulamas\u0131n\u0131 (\u201COyun\u201D) i\u015Fletmektedir. Bu Gizlilik Politikas\u0131,
+      Oyunu kulland\u0131\u011F\u0131n\u0131zda ki\u015Fisel verileri nas\u0131l
+      toplad\u0131\u011F\u0131m\u0131z\u0131, kulland\u0131\u011F\u0131m\u0131z\u0131
+      ve if\u015Fa etti\u011Fimizi a\xE7\u0131klamaktad\u0131r.\r\n\r\n1. B\u0130LG\u0130
+      TOPLAMA VE KULLANIM\r\n\r\na) Otomatik Olarak Toplanan Veriler:\r\nIP co\u011Frafi
+      konum hizmetlerini kullanarak yakla\u015F\u0131k co\u011Frafi konumunuzu (\xFClke
+      ve \u015Fehir gibi) belirlemek i\xE7in IP adresinizi otomatik olarak toplar\u0131z.
+      Bu veriler yaln\u0131zca b\xF6lgesel liderlik tablolar\u0131 sa\u011Flamak
+      i\xE7in kullan\u0131l\u0131r.\r\n\r\nb) Kullan\u0131c\u0131 Taraf\u0131ndan
+      Sa\u011Flanan Veriler:\r\nBir oyuncu ad\u0131 belirlemeyi se\xE7erseniz, bu
+      ad\u0131 liderlik tablolar\u0131nda g\xF6r\xFCnt\xFClemek i\xE7in saklar\u0131z.\r\n\r\nc)
+      \xDC\xE7\xFCnc\xFC Taraf Hizmetleri ve Veri Kullan\u0131m\u0131:\r\n\r\n- Reklamlar
+      (Google AdMob):\r\n  Oyunda reklam sunmak i\xE7in Google AdMob kullan\u0131yoruz.
+      AdMob, ki\u015Fiselle\u015Ftirilmi\u015F reklamlar sunmak i\xE7in \xE7erezler
+      kullanabilir ve cihaz tan\u0131mlay\u0131c\u0131lar\u0131 toplayabilir.\r\n 
+      Daha fazla bilgi: https://policies.google.com/privacy\r\n\r\n- Liderlik Tablolar\u0131
+      (LootLocker):\r\n  \xC7evrimi\xE7i liderlik tablolar\u0131n\u0131 y\xF6netmek
+      i\xE7in LootLocker kullan\u0131yoruz. LootLocker, oyuncu tan\u0131mlay\u0131c\u0131lar\u0131n\u0131
+      ve puanlar\u0131 toplar.\r\n  Daha fazla bilgi: https://www.lootlocker.com/privacy-policy\r\n\r\nNot:
+      Bu \xFC\xE7\xFCnc\xFC taraf hizmetlerin gizlilik uygulamalar\u0131ndan veya
+      i\xE7eriklerinden sorumlu de\u011Filiz.\r\n\r\n2. VER\u0130 G\xDCVENL\u0130\u011E\u0130\r\nVerilerinizi
+      korumak i\xE7in ticari olarak makul \xF6nlemler al\u0131r\u0131z. Ancak, \u0130nternet
+      \xFCzerinden yap\u0131lan hi\xE7bir aktar\u0131m y\xF6nteminin veya elektronik
+      depolama y\xF6nteminin tamamen g\xFCvenli olmad\u0131\u011F\u0131n\u0131 l\xFCtfen
+      unutmay\u0131n.\r\n\r\n3. B\u0130ZE ULA\u015EIN\r\nBu Gizlilik Politikas\u0131
+      ile ilgili herhangi bir sorunuz varsa, l\xFCtfen bize \u015Fu adresten ula\u015F\u0131n:\r\ninfo@maveria.co\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3893658292224
+    m_Localized: "Son Kullan\u0131c\u0131 Lisans S\xF6zle\u015Fmesi (EULA)\nSon G\xFCncelleme:
+      29/07/2025\n\nBu Son Kullan\u0131c\u0131 Lisans S\xF6zle\u015Fmesi (\"EULA\"),
+      Maveria (\"\u015Eirket\") ile sizin aran\u0131zda, Block Rush yaz\u0131l\u0131m
+      \xFCr\xFCn\xFC (\"Yaz\u0131l\u0131m\") i\xE7in yap\u0131lan yasal bir anla\u015Fmad\u0131r.\n\nYaz\u0131l\u0131m\u0131
+      y\xFCkleyerek, kopyalayarak veya ba\u015Fka bir \u015Fekilde kullanarak bu
+      EULA\u2019n\u0131n \u015Fartlar\u0131na ba\u011Fl\u0131 kalmay\u0131 kabul
+      etmi\u015F olursunuz. Bu EULA\u2019n\u0131n \u015Fartlar\u0131n\u0131 kabul
+      etmiyorsan\u0131z, Yaz\u0131l\u0131m\u0131 y\xFCklemeyin veya kullanmay\u0131n.\n\n1.
+      L\u0130SANS VER\u0130LMES\u0130\n\u015Eirket, bu S\xF6zle\u015Fme h\xFCk\xFCmlerine
+      s\u0131k\u0131 s\u0131k\u0131ya ba\u011Fl\u0131 kalman\u0131z \u015Fart\u0131yla,
+      Yaz\u0131l\u0131m\u0131 yaln\u0131zca ki\u015Fisel ve ticari olmayan ama\xE7larla
+      indirme, y\xFCkleme ve kullanma hakk\u0131n\u0131 size geri al\u0131nabilir,
+      m\xFCnhas\u0131r olmayan, devredilemez ve s\u0131n\u0131rl\u0131 bir lisansla
+      verir.\n\n2. KULLANIM KISITLAMALARI\nA\u015Fa\u011F\u0131dakileri yapmamay\u0131
+      ve ba\u015Fkalar\u0131n\u0131n yapmas\u0131na izin vermemeyi kabul edersiniz:\na)
+      Yaz\u0131l\u0131m\u0131 lisanslamak, satmak, kiralamak, devretmek, da\u011F\u0131tmak
+      veya ba\u015Fka bir ticari \u015Fekilde kullanmak.\nb) Yaz\u0131l\u0131m\u0131n
+      herhangi bir k\u0131sm\u0131n\u0131 de\u011Fi\u015Ftirmek, tersine m\xFChendislik
+      yapmak, kaynak koda d\xF6n\xFC\u015Ft\xFCrmek veya par\xE7alar\u0131na ay\u0131rmak.\nc)
+      Yaz\u0131l\u0131m \xFCzerindeki herhangi bir ticari marka, logo, telif hakk\u0131
+      ya da di\u011Fer m\xFClkiyet bildirimlerini kald\u0131rmak veya de\u011Fi\u015Ftirmek.\n\n3.
+      F\u0130KR\u0130 M\xDCLK\u0130YET\nYaz\u0131l\u0131mla ilgili t\xFCm ticari
+      markalar, telif haklar\u0131 ve di\u011Fer fikri m\xFClkiyet haklar\u0131 yaln\u0131zca
+      \u015Eirkete aittir.\n\n4. SONA ERME\nBu EULA, feshedilene kadar y\xFCr\xFCrl\xFCktedir.
+      Bu EULA\u2019n\u0131n herhangi bir \u015Fart\u0131na uymaman\u0131z durumunda,
+      \u015Eirket taraf\u0131ndan herhangi bir bildirim yap\u0131lmaks\u0131z\u0131n
+      bu lisans kapsam\u0131ndaki haklar\u0131n\u0131z otomatik olarak sona erer.\n\n5.
+      GE\xC7ERL\u0130 HUKUK\nBu EULA, T\xFCrkiye Cumhuriyeti yasalar\u0131na ve \xF6zellikle
+      Trabzon ili mevzuat\u0131na tabi olacak ve bu yasalara g\xF6re yorumlanacakt\u0131r."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4688814444544
+    m_Localized: OYNA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4863997939712
+    m_Localized: "L\u0130DERL\u0130K TABLOSU"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5083703971840
+    m_Localized: AYARLAR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5276742619136
+    m_Localized: "\xC7IKI\u015E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5491239325696
+    m_Localized: "TE\u015EEKK\xDCRLER"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6075912720384
+    m_Localized: "OYUNDAN \xC7IKILSIN MI?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6349452644352
+    m_Localized: "GER\u0130"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6725711073280
+    m_Localized: SESLER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6776797696000
+    m_Localized: "M\xDCZ\u0130KLER"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7160953999360
+    m_Localized: "KLAS\u0130K MOD"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7276934893568
+    m_Localized: "ZAMANA KAR\u015EI"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7439543865344
+    m_Localized: "\xD6ZEL OYUN"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8123987169280
+    m_Localized: BOYUT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8191590961152
+    m_Localized: ZORLUK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8630965276672
+    m_Localized: "G\u0130R\u0130\u015E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8677786292224
+    m_Localized: "KULLANICI ADI G\u0130R\u0130N"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9276921647104
+    m_Localized: "BA\u011ELANTI HATASI"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9475144454144
+    m_Localized: "\xDCLKEM"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9807584989184
+    m_Localized: "\u015EEHR\u0130M"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11369296334848
+    m_Localized: "\nB\u0130R MAVERIA OYUNUDUR\n\n\n\n-PROJE Y\xD6NET\u0130M\u0130-\nProje
+      Sorumlusu / Dan\u0131\u015Fman:\nMUSTAFA HAKAN BOZKURT\n\n-GEL\u0130\u015ET\u0130RME
+      EK\u0130B\u0130-\nBa\u015F Yaz\u0131l\u0131mc\u0131:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\nOyun
+      Tasar\u0131m\u0131 & Mekanikleri:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\nUI/UX
+      Tasar\u0131m\u0131 & Uygulamas\u0131:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\n\n\n-G\xD6RSEL
+      VE SANATSAL VARLIKLAR-\n3D Modeller & Materyaller:\n\"Low Poly Wood Pack \u2013
+      Stylized Wooden Models\" - MyUniverse Studio (Unity Asset Store \xFCzerinden)\n\"Low-Poly
+      Simple Nature Pack\" - JustCreate (Unity Asset Store \xFCzerinden)\n\"Sparrow
+      - Quirky Series\" - Omabuarts Studio (Unity Asset Store \xFCzerinden)\n\"Cartoon
+      FX Remaster Free\" - Jean Moreno (Unity Asset Store \xFCzerinden)\n\n\n-M\xDCZ\u0130K
+      & SES-\nOrijinal M\xFCzikler:\n\"8bit Music-062022\" - GWriterStudio\nSes Efektleri:\n\"RPG
+      Essentials Sound Effects\" - leohpaz\n\"FREE UI Click Sound Pack\" - SwishSwoosh\n\n\n-TEKNOLOJ\u0130
+      & \xD6ZEL TE\u015EEKK\xDCRLER-\nOyun Motoru:\nUnity Engine\nSunucu & \xC7evrimi\xE7i
+      Hizmetler:\nLiderlik Tablolar\u0131 ve Oyuncu Verisi - LootLocker\nIP Konum
+      Tespiti - ipinfo.com\n\n\n-KAL\u0130TE G\xDCVENCE & TEST-\nTest Ekibine \xD6zel
+      Te\u015Fekk\xFCr:\n-Kedy\n-lale\n-Adembey27\n\n\n\xA9 2025 MAVERIA. T\xFCm
+      Haklar\u0131 Sakl\u0131d\u0131r."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12024933158912
+    m_Localized: "BLOKLARI S\xDCR\xDCKLE VE BO\u015E ALANLARI DOLDUR"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12366940901376
+    m_Localized: "SIRALARI DOLDUR VE TEM\u0130ZLE"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12682700689408
+    m_Localized: "BLOKLARI D\xD6ND\xDCRMEK \u0130\xC7\u0130N BUTONA TIKLA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12917762068480
+    m_Localized: "S\xDCRPR\u0130Z BLOKLARA D\u0130KKAT ET!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13078206779392
+    m_Localized: "S\u0130ZE EKSTRA PUAN VERME VEYA TAHTADA YEN\u0130 B\u0130R BLOK
+      OLU\u015ETURMA \u0130HT\u0130MAL\u0130 %50'D\u0130R."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13560966975488
+    m_Localized: "E\u011EER BLOKLARI KOYACAK YER KALMADIYSA,"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695469916160
+    m_Localized: "OYUN B\u0130TER!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14528844566528
+    m_Localized: "TEKRAR BA\u015ELAT"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14625674268672
+    m_Localized: DEVAM ET
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15020123394048
+    m_Localized: "\xC7IKI\u015E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15235807088640
+    m_Localized: "GE\xC7M\u0130\u015E OLSUN"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16838731665408
+    m_Localized: "ZAMAN T\xDCKENMEDEN TAMAMLA:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17288285556736
+    m_Localized: KAZANDIN
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

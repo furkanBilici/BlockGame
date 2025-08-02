@@ -178,7 +178,6 @@ public class BlockSpawner : MonoBehaviour
         UIManager.Instance.ShowGameOverPanel();
     }
 
-    // YERLEÞEN BLOÐU LÝSTEDEN SÝLMEK ÝÇÝN YENÝ BÝR PUBLIC FONKSÝYON
     public void RemoveFromActiveBlocks(GameObject blockToRemove)
     {
         if (activeBlocks.Contains(blockToRemove))

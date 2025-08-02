@@ -186,7 +186,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hand-Drawn-Circle-PNG_0: -8434233054330039914
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,0 +1,255 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UiText_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: bf378fa84708acc49b3757bb27fd8a32, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 14329745408
+    m_Localized: LOADING...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 414306963456
+    m_Localized: 'Terms of Service
+
+      &
+
+      Privacy Policy'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1632915853312
+    m_Localized: 'I have read and agree to the '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2033769680896
+    m_Localized: PRIVACY POLICY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2210328907776
+    m_Localized: 'EULA
+
+      (END USER LICENSE AGREEMENT)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2810881937408
+    m_Localized: To play the game, you must accept the Privacy Policy and End User
+      License Agreement (EULA).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3131356123136
+    m_Localized: PLAY GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3483161759744
+    m_Localized: "Privacy Policy\r\nLast Updated: 29/07/2025\r\n\r\nMaveria (\"we,\"
+      \"our,\" or \"us\") operates the Block Rush mobile application (\"the Game\").
+      This Privacy Policy explains how we collect, use, and disclose personal data
+      when you use our Game.\r\n\r\n1. INFORMATION COLLECTION AND USE\r\n\r\na) Automatically
+      Collected Data:\r\nWe automatically collect your IP address to determine your
+      approximate geographical location (such as country and city) using IP geolocation
+      services. This data is used exclusively to provide regional leaderboards.\r\n\r\nb)
+      User-Provided Data:\r\nIf you choose to set a player name, we store this name
+      for display on the leaderboards.\r\n\r\nc) Third-Party Services and Data Usage:\r\n\r\n-
+      Advertisements (Google AdMob):\r\n  We use Google AdMob to serve ads in the
+      Game. AdMob may use cookies and collect device identifiers to provide personalized
+      advertising.\r\n  More info: https://policies.google.com/privacy\r\n\r\n- Leaderboards
+      (LootLocker):\r\n  We use LootLocker to manage online leaderboards. LootLocker
+      collects player identifiers and scores.\r\n  More info: https://www.lootlocker.com/privacy-policy\r\n\r\nNote:
+      We are not responsible for the privacy practices or content of these third-party
+      services.\r\n\r\n2. DATA SECURITY\r\nWe take commercially reasonable measures
+      to protect your data. However, please note that no method of transmission over
+      the Internet or method of electronic storage is completely secure.\r\n\r\n3.
+      CONTACT US\r\nIf you have any questions about this Privacy Policy, please contact
+      us at:\r\ninfo@maveria.co\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3893658292224
+    m_Localized: "End-User License Agreement (EULA)\r\nLast Updated: 29/07/2025\r\n\r\nThis
+      End-User License Agreement (\"EULA\") is a legal agreement between you and
+      Maveria (\"Company\") for the Block Rush software product (\"Software\").\r\n\r\nBy
+      installing, copying, or otherwise using the Software, you agree to be bound
+      by the terms of this EULA. If you do not agree to the terms of this EULA, do
+      not install or use the Software.\r\n\r\n1. LICENSE GRANT\r\nThe Company grants
+      you a revocable, non-exclusive, non-transferable, limited license to download,
+      install, and use the Software solely for your personal, non-commercial purposes,
+      strictly in accordance with the terms of this Agreement.\r\n\r\n2. RESTRICTIONS
+      ON USE\r\nYou agree not to, and you will not permit others to:\r\na) License,
+      sell, rent, lease, assign, distribute, or otherwise commercially exploit the
+      Software.\r\nb) Modify, reverse engineer, decompile, or disassemble any part
+      of the Software.\r\nc) Remove or alter any trademark, logo, copyright, or other
+      proprietary notices in the Software.\r\n\r\n3. INTELLECTUAL PROPERTY\r\nAll
+      trademarks, copyrights, and other intellectual property rights in and to the
+      Software are the sole property of the Company.\r\n\r\n4. TERMINATION\r\nThis
+      EULA is effective until terminated. Your rights under this license will automatically
+      terminate without notice from the Company if you fail to comply with any term(s)
+      of this EULA.\r\n\r\n5. GOVERNING LAW\r\nThis EULA shall be governed by and
+      construed in accordance with the laws of the Republic of T\xFCrkiye, specifically
+      the laws applicable in the province of Trabzon.\r\n\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4688814444544
+    m_Localized: PLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4863997939712
+    m_Localized: LEADER BOARD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5083703971840
+    m_Localized: SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5276742619136
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5491239325696
+    m_Localized: CREDITS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6075912720384
+    m_Localized: EXIT GAME?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6349452644352
+    m_Localized: BACK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6725711073280
+    m_Localized: SOUNDS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6776797696000
+    m_Localized: MUSICS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7160953999360
+    m_Localized: CLASSIC MODE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7276934893568
+    m_Localized: TIMED CHALLENGES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7439543865344
+    m_Localized: CUSTOM GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8123987169280
+    m_Localized: SIZE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8191590961152
+    m_Localized: DIFFICULTY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8630965276672
+    m_Localized: ENTER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8677786292224
+    m_Localized: ENTER YOUR USERNAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9276921647104
+    m_Localized: NO CONNECTION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9475144454144
+    m_Localized: MY COUNTRY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9807584989184
+    m_Localized: MY CITY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11369296334848
+    m_Localized: "\r\nA GAME BY\r\nMAVERIA\r\n\r\n\r\n-PROJECT LEADERSHIP-\r\nProject
+      Supervisor / Mentor:\r\nMUSTAFA HAKAN BOZKURT\r\n\r\n\r\n-DEVELOPMENT TEAM-\r\nLead
+      Programmer:\r\nMUHAMMET FURKAN BILICI\r\nGame Design & Mechanics:\r\nMUHAMMET
+      FURKAN BILICI\r\nUI/UX Design & Implementation:\r\nMUHAMMET FURKAN BILICI\r\n\r\n\r\n-ART
+      & VISUAL ASSETS-\r\n3D Models & Materials:\r\n\"Low Poly Wood Pack \u2013 Stylized
+      Wooden Models\" by MyUniverse Studio (via Unity Asset Store)\r\n\"Low-Poly
+      Simple Nature Pack\" by JustCreate (via Unity Asset Store)\r\n\"Sparrow - Quirky
+      Series\" by Omabuarts Studio (via Unity Asset Store)\n\"Cartoon FX Remaster
+      Free\" by Jean Moreno (via Unity Asset Store)\r\n\r\n\r\n-MUSIC & SOUND-\r\nOriginal
+      Music:\r\n\"8bit Music-062022\" by GWriterStudio\r\nSound Effects:\r\n\"RPG
+      Essentials Sound Effects\" by leohpaz\r\n\"FREE UI Click Sound Pack\" from
+      SwishSwoosh\r\n\r\n\r\n-TECHNOLOGY & SPECIAL THANKS-\r\nGame Engine:\r\nUnity
+      Engine\r\nBackend & Online Services:\r\nLeaderboards & Player Data by LootLocker\r\nIP
+      Geolocation by ipinfo.com\r\n\r\n\r\n-QUALITY ASSURANCE & TESTING-\r\nSpecial
+      Thanks To Our Testers:\r\n-Kedy\r\n-lale\r\n-Adembey27\r\n\r\n\r\n\xA9 2025
+      MAVERIA. All Rights Reserved.\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12024933158912
+    m_Localized: DRAG BLOCKS AND FILL EMPTY SPACES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12366940901376
+    m_Localized: FILL AND CLEAN THE LINES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12682700689408
+    m_Localized: CLICK ON ROTATE BUTTON TO ROTATE THEM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12917762068480
+    m_Localized: BE CAREFUL ABOUT SURPRISE BLOCKS!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13078206779392
+    m_Localized: THERE IS A 50/50 CHANCE THEY'LL GIVE YOU EXTRA POINTS OR SPAWN A
+      NEW BLOCK ON BOARD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13560966975488
+    m_Localized: IF THERE'S NO PLACE TO PUT A BLOCK,
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13695469916160
+    m_Localized: GAME OVER!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14528844566528
+    m_Localized: RESTART
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14625674268672
+    m_Localized: CONTINUE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15020123394048
+    m_Localized: MAIN MENU
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15235807088640
+    m_Localized: GAME OVER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16838731665408
+    m_Localized: 'REACH
+
+      BEFORE TIME ENDS:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17288285556736
+    m_Localized: YOU WIN
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
