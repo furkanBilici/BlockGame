@@ -129,7 +129,7 @@ public class GridManager : MonoBehaviour
                 {
                     if (logicGrid[x, y].name == "SurpriseBox")
                     {
-                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
+                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise(logicGrid[x, y].position);
                     }
                     if (birdAnimator != null) birdAnimator.Play("Spin");
                     cellsToClear.Add(logicGrid[x, y]);
@@ -144,7 +144,7 @@ public class GridManager : MonoBehaviour
                 {
                     if (logicGrid[x, y].name == "SurpriseBox")
                     {
-                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise();
+                        if (GameMechanicsManager.Instance != null) GameMechanicsManager.Instance.OnTriggerSurprise(logicGrid[x,y].position);
                     }
                     if (birdAnimator != null) birdAnimator.Play("Spin");
                     cellsToClear.Add(logicGrid[x, y]);

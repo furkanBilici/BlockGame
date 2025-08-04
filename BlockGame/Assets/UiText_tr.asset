@@ -187,8 +187,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11369296334848
-    m_Localized: "\nB\u0130R MAVERIA OYUNUDUR\n\n\n\n-PROJE Y\xD6NET\u0130M\u0130-\nProje
-      Sorumlusu / Dan\u0131\u015Fman:\nMUSTAFA HAKAN BOZKURT\n\n-GEL\u0130\u015ET\u0130RME
+    m_Localized: "\nB\u0130R MAVERIA\nOYUNUDUR\n\n\n-PROJE Y\xD6NET\u0130M\u0130-\nProje
+      Sorumlusu / Dan\u0131\u015Fman:\nMUSTAFA HAKAN BOZKURT\n\n\n-GEL\u0130\u015ET\u0130RME
       EK\u0130B\u0130-\nBa\u015F Yaz\u0131l\u0131mc\u0131:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\nOyun
       Tasar\u0131m\u0131 & Mekanikleri:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\nUI/UX
       Tasar\u0131m\u0131 & Uygulamas\u0131:\nMUHAMMET FURKAN B\u0130L\u0130C\u0130\n\n\n-G\xD6RSEL
@@ -201,9 +201,7 @@ MonoBehaviour:
       Essentials Sound Effects\" - leohpaz\n\"FREE UI Click Sound Pack\" - SwishSwoosh\n\n\n-TEKNOLOJ\u0130
       & \xD6ZEL TE\u015EEKK\xDCRLER-\nOyun Motoru:\nUnity Engine\nSunucu & \xC7evrimi\xE7i
       Hizmetler:\nLiderlik Tablolar\u0131 ve Oyuncu Verisi - LootLocker\nIP Konum
-      Tespiti - ipinfo.com\n\n\n-KAL\u0130TE G\xDCVENCE & TEST-\nTest Ekibine \xD6zel
-      Te\u015Fekk\xFCr:\n-Kedy\n-lale\n-Adembey27\n\n\n\xA9 2025 MAVERIA. T\xFCm
-      Haklar\u0131 Sakl\u0131d\u0131r."
+      Tespiti - ipinfo.com\n\n\n\xA9 2025 MAVERIA. T\xFCm Haklar\u0131 Sakl\u0131d\u0131r."
     m_Metadata:
       m_Items: []
   - m_Id: 12024933158912
@@ -257,6 +255,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 17288285556736
     m_Localized: KAZANDIN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 636226807697408
+    m_Localized: "D\u0130L:"
     m_Metadata:
       m_Items: []
   references:

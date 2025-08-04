@@ -85,7 +85,8 @@ public class ScoreManager : MonoBehaviour
 
     void UpdateScoreUi()
     {
-        scoreText.text = "Score: " + currentScore;
+        if (PlayerPrefs.GetString("Locale") == "en") scoreText.text = "Score: " + currentScore;
+        else scoreText.text = "Skor: " + currentScore;
     }
     public void CheckHighestScore()
     {

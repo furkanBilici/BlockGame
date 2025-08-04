@@ -1796,12 +1796,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75.63
+  m_fontSize: 75
   m_fontSizeBase: 75.63
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 75
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -3381,6 +3381,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   suprizeBlockPrefab: {fileID: 5406241143436030284, guid: 3c1cfd5df4bbbc143847a8405cc463d9, type: 3}
   placedBlockUntilSuprize: 5
+  goodLuckObject: {fileID: 7855944608473968563, guid: 4e97f5c8088ce4642aa8d4a88b043912, type: 3}
+  badLuckObject: {fileID: 5543607057323131992, guid: ed3e85358ca547341b5b2eee32522e4c, type: 3}
 --- !u!4 &1421149975
 Transform:
   m_ObjectHideFlags: 0
@@ -4113,7 +4115,7 @@ MonoBehaviour:
   height: 8
   gridCellPrefab: {fileID: 5488374026705329908, guid: 2518c590644decd4ebf85026d68c3ad3, type: 3}
   birdAnimator: {fileID: 2020910851}
-  lineClearEffectPrefab: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
+  lineClearEffectPrefab: {fileID: 5880797563127281583, guid: 265d3a5ba69981a4698ceabcedf368b0, type: 3}
 --- !u!4 &1730201958
 Transform:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ public class BlockSpawner : MonoBehaviour
         mpbBlock = new MaterialPropertyBlock();
         SpawnNewBlockSet();
     }
-    int tries = 10;
+    int tries = 5;
     public void SpawnNewBlockSet()
     {
         activeBlocks.Clear();

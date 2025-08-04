@@ -78,8 +78,13 @@ public class UIManager : MonoBehaviour
         if (scoreText != null) 
         {
             scoreText.SetActive(false);
-        }        
-        if(highScore!=null) highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+        }
+        if (highScore != null) 
+        {
+            if(PlayerPrefs.GetString("Locale")=="en") highScore.text = "HIGHEST SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+            else highScore.text = "EN YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
+
+        }
         if (watchAdButton != null && AdsManager.Instance!=null)
         {
             watchAdButton.gameObject.SetActive(true);

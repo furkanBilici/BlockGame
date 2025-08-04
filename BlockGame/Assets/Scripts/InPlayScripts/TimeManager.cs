@@ -20,11 +20,16 @@ public class TimeManager : MonoBehaviour
         completedLevels = PlayerPrefs.GetInt("CompletedLevels", 0);
         point = PlayerPrefs.GetInt("TimedGameScore", 20);
         startTime = PlayerPrefs.GetFloat("TimedGameTime", 20);
-        startText.text = point+" POINTS";
-        timeSecond=startTime;
-        time.text = "REMAINED: " + timeSecond+" S";
+        if (PlayerPrefs.GetString("Locale") == "en")
+            startText.text = point+" POINTS";
+        else startText.text = point + " PUAN";
+        timeSecond =startTime;
+        if (PlayerPrefs.GetString("Locale") == "en") time.text = "REMAINED: " + timeSecond+" S";
+        else time.text = "KALAN: " + timeSecond + " S";
         StartCoroutine(StartAnim());
-        goalText.text = "GOAL:" + point;
+        if (PlayerPrefs.GetString("Locale") == "en")
+            goalText.text = "GOAL:" + point;
+        else goalText.text = "HEDEF:" + point;
         if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
     }
 
@@ -42,7 +47,9 @@ public class TimeManager : MonoBehaviour
                 {
                     time.color = Color.red;
                 }
-                time.text = "REMAINED: " + Mathf.RoundToInt(timeSecond) + " S";
+
+                if (PlayerPrefs.GetString("Locale") == "en") time.text = "REMAINED: " + Mathf.RoundToInt(timeSecond) + " S";
+                else time.text = "KALAN: " + Mathf.RoundToInt(timeSecond) + " S";
                 timeSecond -= 0.02f;
             }
         }

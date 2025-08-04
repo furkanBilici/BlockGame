@@ -81,17 +81,65 @@ public class GameMechanicsManager : MonoBehaviour
         }
         suprizeBlock.transform.localScale = lastScale;
     }
-    public void OnTriggerSurprise()
+    [SerializeField]GameObject goodLuckObject;
+    [SerializeField] GameObject badLuckObject;
+    public void OnTriggerSurprise(Vector3 position)
     {
         if (Random.value > 0.5f)
         {
-            Debug.Log("ÝYÝ SÜRPRÝZ! Bonus Puan!");
+            
             if (scoreManager != null) scoreManager.AddScore(3);
+           StartCoroutine( LuckEffect(true, position));
         }
         else
         {
-            Debug.Log("KÖTÜ SÜRPRÝZ! Tahtaya bir taþ yerleþtirildi!");
+          
             SpawnSurpriseBox();
+            StartCoroutine(LuckEffect(false, position));
         }
+    }
+    IEnumerator LuckEffect(bool good, Vector3 pos)
+    {
+        Vector3 offset = new Vector3(0, 0, -2f);
+        Vector3 positionAdder = new Vector3(0, 0.02f, 0);
+        GameObject luckPrefab;
+        if (!good)
+        {
+            luckPrefab = badLuckObject; 
+            Debug.Log("KÖTÜ SÜRPRÝZ! Tahtaya bir taþ yerleþtirildi!");
+        }
+        else
+        {
+            Debug.Log("ÝYÝ SÜRPRÝZ! Bonus Puan!");
+            luckPrefab = goodLuckObject;
+        }
+        pos += offset;
+        GameObject luckObject= Instantiate(luckPrefab,pos,Quaternion.identity);
+        float startAlpha=0f;
+        SpriteRenderer sr = luckObject.GetComponent<SpriteRenderer>();
+        Color color =sr.color;
+        color.a = startAlpha;
+        float timer = 0;
+        float duration = 0.5f;
+        while (timer < duration)
+        {
+            timer+= Time.deltaTime*1.5f;
+            startAlpha = Mathf.Lerp(0, 1, timer / duration);
+            luckObject.transform.position += positionAdder;
+            color.a = startAlpha;
+            sr.color=color;
+            yield return null;
+        }
+        timer = 0;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime/1.5f;
+            startAlpha = Mathf.Lerp(1, 0, timer / duration);
+            luckObject.transform.position += positionAdder;
+            color.a = startAlpha;
+            sr.color = color;
+            yield return null;
+        }
+        Destroy(luckObject);    
     }
 }

@@ -190,9 +190,7 @@ MonoBehaviour:
       Essentials Sound Effects\" by leohpaz\r\n\"FREE UI Click Sound Pack\" from
       SwishSwoosh\r\n\r\n\r\n-TECHNOLOGY & SPECIAL THANKS-\r\nGame Engine:\r\nUnity
       Engine\r\nBackend & Online Services:\r\nLeaderboards & Player Data by LootLocker\r\nIP
-      Geolocation by ipinfo.com\r\n\r\n\r\n-QUALITY ASSURANCE & TESTING-\r\nSpecial
-      Thanks To Our Testers:\r\n-Kedy\r\n-lale\r\n-Adembey27\r\n\r\n\r\n\xA9 2025
-      MAVERIA. All Rights Reserved.\r\n"
+      Geolocation by ipinfo.com\r\n\r\r\n\r\n\xA9 2025 MAVERIA. All Rights Reserved.\r\n"
     m_Metadata:
       m_Items: []
   - m_Id: 12024933158912
@@ -248,6 +246,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 17288285556736
     m_Localized: YOU WIN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 636226807697408
+    m_Localized: 'LANGUAGE:'
     m_Metadata:
       m_Items: []
   references:
