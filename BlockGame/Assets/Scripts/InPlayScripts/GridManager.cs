@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -26,7 +25,8 @@ public class GridManager : MonoBehaviour
         cGameManager = FindFirstObjectByType<CustomGameManager>();
         if (cGameManager!=null)
         {
-            width = height = cGameManager.size; 
+            width = height =  PlayerPrefs.GetInt("boardScale", 0) + 7;
+            Debug.Log(width);
         }
         logicGrid = new Transform[width, height];
         //visualGridCells = new Renderer[width, height];
