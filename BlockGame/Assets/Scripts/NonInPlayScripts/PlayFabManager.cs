@@ -120,6 +120,7 @@ public class PlayFabManager : MonoBehaviour
                 var json = JObject.FromObject(rawResult);
                 bool isNameTaken = json["isNameTaken"]?.Value<bool>() ?? false;
                 onComplete?.Invoke(isNameTaken);
+                Debug.Log("Bu isim alýnmýþ");
             }
             catch (Exception ex)
             {
@@ -163,7 +164,7 @@ public class PlayFabManager : MonoBehaviour
             {
                 listType = listType,
                 playerCountryCode = countryCode,
-                city = city
+                playerCity = city
             }
         };
 
@@ -182,10 +183,9 @@ public class PlayFabManager : MonoBehaviour
                 onComplete?.Invoke(null);
                 return;
             }
-
             try
             {
-                var jsonResult = (JObject)result.FunctionResult;
+                var jsonResult = JObject.FromObject(result.FunctionResult);
                 var leaderboardArray = jsonResult["leaderboard"];
 
                 var filteredLeaderboard = leaderboardArray.ToObject<List<PlayerLeaderboardEntry>>();

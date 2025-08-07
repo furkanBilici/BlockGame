@@ -24,7 +24,6 @@ public class MainMenuManager : MonoBehaviour
 
     public Button sizeButton;
     public Button difficultyButton;
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -50,12 +49,7 @@ public class MainMenuManager : MonoBehaviour
         SoundButtonControl();
         MusicButtonControl();
         HighScore.SetActive(true);
-        if (PlayerPrefs.GetInt("HighestScore", 0) > 0)
-        {
-            if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
-            else HighScore.GetComponent<TextMeshProUGUI>().text = "YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
-        }
+       
 
 
         boardScale = PlayerPrefs.GetInt("boardScale", 1);
@@ -384,6 +378,7 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI welcomText;
     IEnumerator CheckForPlayerName()
     {
+
         // Login tamamlanana kadar bekle
         while (!PlayFabManager.Instance.IsLoggedIn)
             yield return null;
@@ -401,7 +396,7 @@ public class MainMenuManager : MonoBehaviour
         {
             PlayFabManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
             {
-                if (nameExists)
+                if (!nameExists)
                 {
                     welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
                         ? "WELCOME: " + playerName
@@ -409,13 +404,19 @@ public class MainMenuManager : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("ekleme yaptý niyeki");
                     PlayFabManager.Instance.SetPLayerName(playerName);
                     welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
                         ? "WELCOME: " + playerName
                         : "HOÞGELDÝN: " + playerName;
                 }
             });
-
+            if (PlayerPrefs.GetInt("HighestScore", 0) > 0)
+            {
+                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
+                    HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+                else HighScore.GetComponent<TextMeshProUGUI>().text = "YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
+            }
             ScoreChecker(); // Giriþ tamamlandýktan sonra skor kontrolü
         }
     }
@@ -477,6 +478,7 @@ public class MainMenuManager : MonoBehaviour
             if (PlayFabManager.Instance != null)
             {
                 PlayFabManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
+
             }
         }
     }
