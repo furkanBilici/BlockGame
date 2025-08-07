@@ -11,7 +11,8 @@ public class PlayFabManager : MonoBehaviour
 {
     public static PlayFabManager Instance;
     private const string PLAYER_NAME_KEY = "PlayerName";
-    private const string LEADERBOARD_STATISTIC_NAME = "global_high_scores";
+    private const string LEADERBOARD_STATISTIC_NAME = "global_highest_score";
+    public bool IsLoggedIn=false;    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -24,6 +25,7 @@ public class PlayFabManager : MonoBehaviour
     }
     private void Start()
     {
+        IsLoggedIn = false;
         StartGuestSession();
     }
     void StartGuestSession()
@@ -38,6 +40,7 @@ public class PlayFabManager : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("PlayFab'e baþarýlý bir þekilde baðlandý.");
+        IsLoggedIn = true;
         // Burada LootLocker kodunda yaptýðýn gibi konum bilgisini çekebilirsin.
         if (LocationManager.Instance != null)
         {
@@ -57,7 +60,7 @@ public class PlayFabManager : MonoBehaviour
             {
                 new StatisticUpdate
                 {
-                    StatisticName="global_highest_score",
+                    StatisticName=LEADERBOARD_STATISTIC_NAME,
                     Value = scoreToSubmit   
                 }
             }
@@ -99,27 +102,28 @@ public class PlayFabManager : MonoBehaviour
     {
         var request= new ExecuteCloudScriptRequest
         {
-            FunctionName="CheckIfDisplayNmaeExists",
+            FunctionName="CheckIfDisplayNameExists",
             FunctionParameter = new { displayName = nameToCheck }
         };
         PlayFabClientAPI.ExecuteCloudScript(request, (result) =>
         {
             if (result.Error != null)
             {
-                Debug.LogError("CloudScript çaðrýlýrkn hata " + result.Error);
+                Debug.LogError("CloudScript çaðrýlýrken hata: " + result.Error.Message);
                 onComplete?.Invoke(false);
                 return;
             }
-            var jsonResult = (JObject)result.FunctionResult;
-            bool isNameTaken = (bool)jsonResult["isNameTaken"];
-            if (isNameTaken)
+
+            try
             {
-                Debug.Log("isim alýnmýþ");
-                onComplete?.Invoke(true);
+                var rawResult = result.FunctionResult;
+                var json = JObject.FromObject(rawResult);
+                bool isNameTaken = json["isNameTaken"]?.Value<bool>() ?? false;
+                onComplete?.Invoke(isNameTaken);
             }
-            else
+            catch (Exception ex)
             {
-                Debug.Log("isim alýnmamýþ kullanýlabilir");
+                Debug.LogError("FunctionResult iþlenirken hata: " + ex.Message);
                 onComplete?.Invoke(false);
             }
         },
@@ -127,8 +131,8 @@ public class PlayFabManager : MonoBehaviour
         {
             Debug.LogError("Cloud Script isteði baþarýsýz " + error.GenerateErrorReport());
             onComplete?.Invoke(false);
-        }
-        );
+        });
+
     }
     public void SavePlayerLocation(string countryCode, string city)
     {
@@ -172,12 +176,26 @@ public class PlayFabManager : MonoBehaviour
                 return;
             }
 
-            var jsonResult = (JObject)result.FunctionResult;
-            var leaderboardArray = jsonResult["leaderboard"];
+            if (result.FunctionResult == null)
+            {
+                Debug.LogError("Cloud Script'ten geçersiz sonuç döndürüldü.");
+                onComplete?.Invoke(null);
+                return;
+            }
 
-            // Lider tablosunu PlayerLeaderboardEntry listesine çevir.
-            var filteredLeaderboard = leaderboardArray.ToObject<List<PlayerLeaderboardEntry>>();
-            onComplete?.Invoke(filteredLeaderboard);
+            try
+            {
+                var jsonResult = (JObject)result.FunctionResult;
+                var leaderboardArray = jsonResult["leaderboard"];
+
+                var filteredLeaderboard = leaderboardArray.ToObject<List<PlayerLeaderboardEntry>>();
+                onComplete?.Invoke(filteredLeaderboard);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Cloud Script'ten dönen sonuç ayrýþtýrýlamadý: " + ex.Message);
+                onComplete?.Invoke(null);
+            }
         },
         (error) =>
         {

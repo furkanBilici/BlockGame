@@ -1,5 +1,6 @@
 using LootLocker.Requests;
 using System;
+using System.Collections;
 using TMPro;
 
 using UnityEngine;
@@ -61,7 +62,7 @@ public class MainMenuManager : MonoBehaviour
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
-        if (PlayFabManager.Instance != null) CheckForPlayerName();
+        if (PlayFabManager.Instance != null) StartCoroutine (CheckForPlayerName());
         
     }
     public void StartGame()
@@ -322,6 +323,7 @@ public class MainMenuManager : MonoBehaviour
             noConnectionPanel.SetActive(true);
             return;
         }
+        if (listType==-1) { HighscoreBoardPanel.SetActive(false); return; }
 
         HighscoreBoardPanel.SetActive(true);
         foreach (Transform child in scoreContentParent.transform)
@@ -335,6 +337,7 @@ public class MainMenuManager : MonoBehaviour
         {
             case 0:
                 title += "GLOBAL";
+                if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR GLOBAL";
                 break;
             case 1:
                 title += "MY COUNTRY";
@@ -379,33 +382,44 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI statusText;
     public Button confirmNameButton;
     public TextMeshProUGUI welcomText;
-    void CheckForPlayerName()
+    IEnumerator CheckForPlayerName()
     {
+        // Login tamamlanana kadar bekle
+        while (!PlayFabManager.Instance.IsLoggedIn)
+            yield return null;
+
         string playerName = PlayerPrefs.GetString(PLAYER_NAME_KEY);
-        if (String.IsNullOrEmpty(playerName) && Application.internetReachability != NetworkReachability.NotReachable)
+
+        if (string.IsNullOrEmpty(playerName) && Application.internetReachability != NetworkReachability.NotReachable)
         {
             FirstLanguageChecker();
             setNamePanel.SetActive(true);
+            yield break; // Ýsim boþsa ve panel açýldýysa devam etme
         }
-        if (!String.IsNullOrEmpty(playerName))
+
+        if (!string.IsNullOrEmpty(playerName))
         {
             PlayFabManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
             {
                 if (nameExists)
                 {
-                    if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                    else welcomText.text = "HOÞGELDÝN: " + playerName;
+                    welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
+                        ? "WELCOME: " + playerName
+                        : "HOÞGELDÝN: " + playerName;
                 }
                 else
                 {
                     PlayFabManager.Instance.SetPLayerName(playerName);
-                    if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                    else welcomText.text = "HOÞGELDÝN: " + playerName;
+                    welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
+                        ? "WELCOME: " + playerName
+                        : "HOÞGELDÝN: " + playerName;
                 }
             });
-            ScoreChecker();
+
+            ScoreChecker(); // Giriþ tamamlandýktan sonra skor kontrolü
         }
     }
+
     public void ConfirmPlayerName()
     {
         string playerName = nameField.text;
