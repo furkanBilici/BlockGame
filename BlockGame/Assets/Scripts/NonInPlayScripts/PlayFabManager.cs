@@ -12,7 +12,7 @@ public class PlayFabManager : MonoBehaviour
     public static PlayFabManager Instance;
     private const string PLAYER_NAME_KEY = "PlayerName";
     private const string LEADERBOARD_STATISTIC_NAME = "global_highest_score";
-    public bool IsLoggedIn=false;    
+    public bool IsLoggedIn=false;  
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -78,7 +78,7 @@ public class PlayFabManager : MonoBehaviour
         Debug.LogError("Skor gönderilirken hata oluþtu: " + error.GenerateErrorReport());
     }
 
-    public void SetPLayerName(string playerName, Action onComplete = null)
+    public void SetPLayerName(string playerName, Action<bool> onComplete)
     {
         var request = new UpdateUserTitleDisplayNameRequest
         {
@@ -90,11 +90,15 @@ public class PlayFabManager : MonoBehaviour
             Debug.Log("Ýsim baþarýyla eklendi: " + result.DisplayName);
             PlayerPrefs.SetString(PLAYER_NAME_KEY, result.DisplayName);
             PlayerPrefs.Save();
-            onComplete?.Invoke();
+            onComplete?.Invoke(true);
+            PlayerPrefs.SetInt("NameSavedOnPlayFab", 1);
+            PlayerPrefs.Save();
         }, (error) =>
         {
             Debug.LogError("Ýsim eklenemedi: " + error.GenerateErrorReport());
-            onComplete?.Invoke();
+            PlayerPrefs.SetInt("NameSavedOnPlayFab", 0);
+            PlayerPrefs.Save();
+            onComplete?.Invoke(false);
         });
     }
 
@@ -120,7 +124,6 @@ public class PlayFabManager : MonoBehaviour
                 var json = JObject.FromObject(rawResult);
                 bool isNameTaken = json["isNameTaken"]?.Value<bool>() ?? false;
                 onComplete?.Invoke(isNameTaken);
-                Debug.Log("Bu isim alýnmýþ");
             }
             catch (Exception ex)
             {
@@ -164,7 +167,7 @@ public class PlayFabManager : MonoBehaviour
             {
                 listType = listType,
                 playerCountryCode = countryCode,
-                playerCity = city
+                city = city
             }
         };
 

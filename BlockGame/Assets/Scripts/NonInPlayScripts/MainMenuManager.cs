@@ -21,6 +21,7 @@ public class MainMenuManager : MonoBehaviour
     public Button music;
     bool modePanelBool;
     bool customModePanelBool;
+    public bool nameSavedOnPlayFab;
 
     public Button sizeButton;
     public Button difficultyButton;
@@ -41,6 +42,7 @@ public class MainMenuManager : MonoBehaviour
     }
     private void Start()
     {
+        nameSavedOnPlayFab = PlayerPrefs.GetInt("NameSavedOnPlayFab", 0) == 1;
         CheckLanguage();
         if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
         if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
@@ -56,6 +58,12 @@ public class MainMenuManager : MonoBehaviour
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
         ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
         ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
+        if (PlayerPrefs.GetInt("HighestScore", 0) > 0)
+        {
+            if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
+                HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
+            else HighScore.GetComponent<TextMeshProUGUI>().text = "YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
+        }
         if (PlayFabManager.Instance != null) StartCoroutine (CheckForPlayerName());
         
     }
@@ -298,6 +306,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject noConnectionPanel;
 
     public TextMeshProUGUI highscoreTitle;
+    public Button GlobalButton;
+    public Button CountryButton;
+    public Button CityButton;
 
     public void NoConnectionPanel()
     {
@@ -317,7 +328,15 @@ public class MainMenuManager : MonoBehaviour
             noConnectionPanel.SetActive(true);
             return;
         }
-        if (listType==-1) { HighscoreBoardPanel.SetActive(false); return; }
+        if (listType==-1)
+        { 
+            HighscoreBoardPanel.SetActive(false); 
+            GlobalButton.interactable = true;
+            CountryButton.interactable = true;
+            CityButton.interactable = true;
+
+            return; 
+        }
 
         HighscoreBoardPanel.SetActive(true);
         foreach (Transform child in scoreContentParent.transform)
@@ -332,14 +351,23 @@ public class MainMenuManager : MonoBehaviour
             case 0:
                 title += "GLOBAL";
                 if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR GLOBAL";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
                 break;
             case 1:
                 title += "MY COUNTRY";
                 if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR ÜLKEM";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
                 break;
             case 2:
                 title += "MY CITY";
                 if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR ÞEHRÝM";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
                 break;
         }
         highscoreTitle.text = title;
@@ -360,6 +388,9 @@ public class MainMenuManager : MonoBehaviour
                     nameText.text = leaderboardList[i].DisplayName;
                     scoreText.text = leaderboardList[i].StatValue.ToString();
                 }
+                GlobalButton.interactable = !(listType==0);
+                CountryButton.interactable = !(listType==1);
+                CityButton.interactable = !(listType==2);
             }
             else
             {
@@ -378,7 +409,6 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI welcomText;
     IEnumerator CheckForPlayerName()
     {
-
         // Login tamamlanana kadar bekle
         while (!PlayFabManager.Instance.IsLoggedIn)
             yield return null;
@@ -391,32 +421,32 @@ public class MainMenuManager : MonoBehaviour
             setNamePanel.SetActive(true);
             yield break; // Ýsim boþsa ve panel açýldýysa devam etme
         }
+        
 
         if (!string.IsNullOrEmpty(playerName))
         {
-            PlayFabManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+            if (!nameSavedOnPlayFab)
             {
-                if (!nameExists)
+                PlayFabManager.Instance.SetPLayerName(playerName, (result) =>
                 {
-                    welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                        ? "WELCOME: " + playerName
-                        : "HOÞGELDÝN: " + playerName;
-                }
-                else
-                {
-                    Debug.Log("ekleme yaptý niyeki");
-                    PlayFabManager.Instance.SetPLayerName(playerName);
-                    welcomText.text = (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                        ? "WELCOME: " + playerName
-                        : "HOÞGELDÝN: " + playerName;
-                }
-            });
-            if (PlayerPrefs.GetInt("HighestScore", 0) > 0)
-            {
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                    HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
-                else HighScore.GetComponent<TextMeshProUGUI>().text = "YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
+                    if (result)
+                    {
+                        nameSavedOnPlayFab = true;
+                    }
+                    else
+                    {
+                        Debug.Log("Bu isim alýnmýþtir loo");
+                        setNamePanel.SetActive(true);
+                        statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                            ? "This username is used by another player"
+                            : "Bu kullanýcý adý kullanýlýyor";
+                        statusText.color = Color.red;
+                    }
+                });
             }
+            welcomText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                       ? "WELCOME: " + playerName
+                       : "HOÞGELDÝN: " + playerName;
             ScoreChecker(); // Giriþ tamamlandýktan sonra skor kontrolü
         }
     }
@@ -433,30 +463,40 @@ public class MainMenuManager : MonoBehaviour
 
         confirmNameButton.interactable = false;
         statusText.color = Color.white;
-        if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) statusText.text = "Checking...";
-        else statusText.text = "Kontrol ediliyor...";
+        statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+            ? "Checking..."
+            : "Kontrol ediliyor...";
 
-        PlayFabManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+        if (!nameSavedOnPlayFab)
         {
-            confirmNameButton.interactable = true;
-            if (nameExists)
+            PlayFabManager.Instance.SetPLayerName(playerName, (result) =>
             {
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) statusText.text = "This username is used by another player";
-                else statusText.text = "Bu kullanýcý adý kullanýlýyor";
-                statusText.color = Color.red;
-            }
-            else
-            {
-                statusText.text = "Name saved!";
-                PlayFabManager.Instance.SetPLayerName(playerName);
-                setNamePanel.SetActive(false);
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                else welcomText.text = "HOÞGELDÝN: " + playerName;
-                HowToPlayPanelButton();
-                
-            }
-        });
+                if (result)
+                {
+                    Debug.Log("Bu isim kullanýlmýo");
+                    statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "Name saved!"
+                        : "Ýsim kaydedildi!";
+                    setNamePanel.SetActive(false);
+                    welcomText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "WELCOME: " + playerName
+                        : "HOÞGELDÝN: " + playerName;
+                    nameSavedOnPlayFab = true;
+                    HowToPlayPanelButton();
+                }
+                else
+                {
+                    Debug.Log("Bu isim alýnmýþtir loo");
+                    statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "This username is used by another player"
+                        : "Bu kullanýcý adý kullanýlýyor";
+                    statusText.color = Color.red;
+                } 
+                confirmNameButton.interactable = true;
+            });
+        }
     }
+
     System.Collections.IEnumerator ShowErrorText()
     {
         errorText.text = "Username must be longer than 3 characters!";

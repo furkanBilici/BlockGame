@@ -4224,7 +4224,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
+  m_fontSize: 87.85
   m_fontSizeBase: 94
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6822,8 +6822,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -763.03}
-  m_SizeDelta: {x: 287.98657, y: 101.70972}
+  m_AnchoredPosition: {x: 0, y: -743}
+  m_SizeDelta: {x: 240.285, y: 132.327}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &695435253
 MonoBehaviour:
@@ -7834,6 +7834,7 @@ MonoBehaviour:
   customModePanel: {fileID: 231071245}
   sound: {fileID: 1971464649}
   music: {fileID: 728471537}
+  nameSavedOnPlayFab: 0
   sizeButton: {fileID: 851248851}
   difficultyButton: {fileID: 1920630926}
   minScale: {x: 1, y: 1, z: 1}
@@ -7850,6 +7851,9 @@ MonoBehaviour:
   scoreEntryPrefab: {fileID: 6868433686356428581, guid: c460ccf0705761d44a5d05f432bd9c01, type: 3}
   noConnectionPanel: {fileID: 484235541}
   highscoreTitle: {fileID: 1107887271}
+  GlobalButton: {fileID: 2139808334}
+  CountryButton: {fileID: 2119379307}
+  CityButton: {fileID: 1270055040}
   setNamePanel: {fileID: 1977946758}
   nameField: {fileID: 2055630453}
   errorText: {fileID: 1056334578}
@@ -10968,8 +10972,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: -631.89124}
-  m_SizeDelta: {x: 565.9812, y: 132.287}
+  m_AnchoredPosition: {x: 0.0000075495, y: -597.45}
+  m_SizeDelta: {x: 528.949, y: 150.36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1017205914
 MonoBehaviour:
@@ -17882,8 +17886,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -470.56}
-  m_SizeDelta: {x: 1002.0016, y: 162.1128}
+  m_AnchoredPosition: {x: 0.000019073, y: -441.73}
+  m_SizeDelta: {x: 786.529, y: 161.062}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1568417272
 MonoBehaviour:
@@ -18447,7 +18451,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 77.05
+  m_fontSize: 81.3
   m_fontSizeBase: 94
   m_fontWeight: 400
   m_enableAutoSizing: 1
