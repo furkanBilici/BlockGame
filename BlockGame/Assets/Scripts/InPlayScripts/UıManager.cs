@@ -142,7 +142,7 @@ public class UIManager : MonoBehaviour
         panelActive=false;
         panel.SetActive(false);
         gameoverText.SetActive(false);
-        scoreTextEnd.SetActive(false);
+        if(scoreTextEnd!=null) scoreTextEnd.SetActive(false);
         scoreText.SetActive(true);
         if (watchAdButton != null && AdsManager.Instance != null)
         {
@@ -155,7 +155,7 @@ public class UIManager : MonoBehaviour
         watchAdButton.interactable = false;
 
         // Reklamý göstermesi için AdsManager'ý çaðýr.
-        AdsManager.Instance.ShowRewardedAd();
+        if(AdsManager.Instance!=null)AdsManager.Instance.ShowRewardedAd();
     }
     public void NextTimedLevel()
     {

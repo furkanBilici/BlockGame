@@ -207,9 +207,14 @@ public class BlockSpawner : MonoBehaviour
     private void ContinueGameAfterAd()
     {
         Debug.Log("Reklam ödülü alýnýyor: Oyuna devam ediliyor.");
-
+        
         if (UIManager.Instance != null)
         {
+            if (UIManager.Instance.GameType == 1)
+            {
+                PlayerPrefs.SetInt("AdWatched", 1);
+                PlayerPrefs.Save();
+            }
             UIManager.Instance.HideGameOverPanel();
         }
 

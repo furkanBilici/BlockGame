@@ -51,8 +51,6 @@ public class MainMenuManager : MonoBehaviour
         SoundButtonControl();
         MusicButtonControl();
         HighScore.SetActive(true);
-       
-
 
         boardScale = PlayerPrefs.GetInt("boardScale", 1);
         difficulty = PlayerPrefs.GetInt("difficulty", 0);
@@ -497,7 +495,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    System.Collections.IEnumerator ShowErrorText()
+    IEnumerator ShowErrorText()
     {
         errorText.text = "Username must be longer than 3 characters!";
         float timer = 0f;
@@ -526,34 +524,41 @@ public class MainMenuManager : MonoBehaviour
     [Header("CreditPanel")]
     [SerializeField] private GameObject creditPanel;
     [SerializeField] private GameObject creditText;
-
+    bool isCreditPanelActive=false;
     public void CreditPanelOpen()
     {
         if (creditPanel.activeSelf)
         {
+            isCreditPanelActive = false;
             creditPanel.SetActive(false);
         }
         else
         {
+            isCreditPanelActive = true;
             creditPanel.SetActive(true);
             StartCoroutine(CreditTextPanel());
         }
     }
-    System.Collections.IEnumerator CreditTextPanel()
+    IEnumerator CreditTextPanel()
     {
         Vector3 startPos = new Vector3(creditText.transform.position.x, 0, 0);
         creditText.transform.position = startPos;
-        Vector3 targetPos = new Vector3(creditText.transform.position.x, creditText.transform.position.y + 3000, creditText.transform.position.z);
+        Vector3 targetPos = new Vector3(creditText.transform.position.x, creditText.transform.position.y+Screen.height, creditText.transform.position.z);
         float timer = 0;
         float duration = 20f;
         while (timer < duration)
         {
+            if(!isCreditPanelActive) break;
             creditText.transform.position = Vector3.Lerp(startPos, targetPos, timer / duration);
             timer += Time.deltaTime;
             yield return null;
         }
-        yield return new WaitForSeconds(1f);
-        creditPanel.SetActive(false);
+        if (isCreditPanelActive)
+        {
+            isCreditPanelActive = false;
+            yield return new WaitForSeconds(3f);
+            creditPanel.SetActive(false);
+        }
     }
 
     [Header("How to Play")]

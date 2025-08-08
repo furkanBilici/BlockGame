@@ -7,8 +7,8 @@ public class AdsManager : MonoBehaviour
     public static AdsManager Instance { get; private set; }
     private RewardedAd rewardedAd;
     private BannerView bannerView;
-    private string rewardedAdUnitId = "ca-app-pub-4143813779075215/9735079661";
-    private string bannerAdUnitId = "ca-app-pub-4143813779075215/4661666630";
+    private string rewardedAdUnitId = "ca-app-pub-3869216132353672/7814694571";
+    private string bannerAdUnitId = "ca-app-pub-3869216132353672/8056768547";
 
     public bool IsRewardedAdLoaded => rewardedAd != null;
     public bool IsBannerAdLoaded => bannerView!=null;
