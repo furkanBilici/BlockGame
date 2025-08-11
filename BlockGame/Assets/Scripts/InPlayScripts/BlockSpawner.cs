@@ -104,6 +104,10 @@ public class BlockSpawner : MonoBehaviour
             Debug.LogError("GEÇERLÝ SET BULUNAMADI! OYUN BÝTÝYOR.");
             HandleGameOver();
         }
+        else
+        {
+            gridManager.CleanEmptyBlockParents();
+        }
     }
 
 
@@ -201,7 +205,7 @@ public class BlockSpawner : MonoBehaviour
 
     void OnDisable()
     {
-            AdsManager.OnRewardEarned -= ContinueGameAfterAd;//script kapatýldýðýnda dinlemeye devam etmesin, performans için
+        AdsManager.OnRewardEarned -= ContinueGameAfterAd;//script kapatýldýðýnda dinlemeye devam etmesin, performans için
     }
 
     private void ContinueGameAfterAd()
@@ -217,7 +221,7 @@ public class BlockSpawner : MonoBehaviour
             }
             UIManager.Instance.HideGameOverPanel();
         }
-
+        if(AdsManager.Instance!=null) AdsManager.Instance.adWatched = true;
         SpawnNewBlockSet();
     }
 }

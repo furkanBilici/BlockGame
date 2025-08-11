@@ -10,6 +10,7 @@ public class AdsManager : MonoBehaviour
     private string rewardedAdUnitId = "ca-app-pub-3869216132353672/7814694571";
     private string bannerAdUnitId = "ca-app-pub-3869216132353672/8056768547";
 
+    public bool adWatched = false;
     public bool IsRewardedAdLoaded => rewardedAd != null;
     public bool IsBannerAdLoaded => bannerView!=null;
     public static event Action OnRewardEarned;

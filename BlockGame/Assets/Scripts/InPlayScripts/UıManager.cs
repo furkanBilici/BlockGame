@@ -85,9 +85,13 @@ public class UIManager : MonoBehaviour
             else highScore.text = "EN YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
 
         }
-        if (watchAdButton != null && AdsManager.Instance!=null)
+        if (watchAdButton != null && AdsManager.Instance!=null && !AdsManager.Instance.adWatched)
         {
-            watchAdButton.gameObject.SetActive(true);
+            watchAdButton.gameObject.SetActive(true);   
+        }
+        if (AdsManager.Instance.adWatched)
+        {
+            AdsManager.Instance.adWatched = false;
         }
     }
 

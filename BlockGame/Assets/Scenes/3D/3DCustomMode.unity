@@ -210,7 +210,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -2171,6 +2171,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 58a3ba44a00b05e438cec67596acd50f, type: 3}
   m_PrefabInstance: {fileID: 943574893}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &943574895 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 141623589076314366, guid: 58a3ba44a00b05e438cec67596acd50f, type: 3}
+  m_PrefabInstance: {fileID: 943574893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &949704589
 GameObject:
   m_ObjectHideFlags: 0
@@ -3142,6 +3147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 9
   difficulty: 2
+  back: {fileID: 943574895}
 --- !u!1 &1290185734
 GameObject:
   m_ObjectHideFlags: 0
