@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 1929151377059296057}
   - component: {fileID: 3061921599561627815}
   - component: {fileID: 1762322970802823736}
-  - component: {fileID: 4408842294148622436}
-  - component: {fileID: 8041113006765336892}
   m_Layer: 0
   m_Name: 3dBlockCell
   m_TagString: Untagged
@@ -30,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.93, y: 0.93, z: 0.93}
+  m_LocalScale: {x: 0.98, y: 0.98, z: 0.98}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -88,44 +86,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4408842294148622436
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745422584643987635}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.99999994, y: 0.99999994, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8041113006765336892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745422584643987635}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c20c55ec1b5774193813654e4e2c88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlaced: 0
-  ghostBlockColor: {r: 1, g: 1, b: 1, a: 0.29411766}
-  blockBasePrefab: {fileID: 8213470618996796906, guid: 083e3c8a3b6c29e4aa4396d68db03d92, type: 3}
-  blockCellPrefab: {fileID: 7745422584643987635}
-  ghostMaterial: {fileID: 2100000, guid: c99ef530df00a2f49b99fb3ddfd5c4cd, type: 2}
-  doubleClickTimeCounter: 0
-  doubleClickCounter: 0
-  rotate: 0

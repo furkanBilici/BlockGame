@@ -1,5 +1,5 @@
-using LootLocker.Requests;
 using System;
+using System.Collections;
 using TMPro;
 
 using UnityEngine;
@@ -20,10 +20,10 @@ public class MainMenuManager : MonoBehaviour
     public Button music;
     bool modePanelBool;
     bool customModePanelBool;
+    public bool nameSavedOnPlayFab;
 
     public Button sizeButton;
     public Button difficultyButton;
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -41,6 +41,7 @@ public class MainMenuManager : MonoBehaviour
     }
     private void Start()
     {
+        nameSavedOnPlayFab = PlayerPrefs.GetInt("NameSavedOnPlayFab", 0) == 1;
         CheckLanguage();
         if (AdsManager.Instance != null) AdsManager.Instance.LoadBannerAd();
         if (AudioManager.Instance != null) AudioManager.Instance.StopAllMusic();
@@ -49,19 +50,18 @@ public class MainMenuManager : MonoBehaviour
         SoundButtonControl();
         MusicButtonControl();
         HighScore.SetActive(true);
+
+        boardScale = PlayerPrefs.GetInt("boardScale", 1);
+        difficulty = PlayerPrefs.GetInt("difficulty", 0);
+        ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
+        ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
         if (PlayerPrefs.GetInt("HighestScore", 0) > 0)
         {
             if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
                 HighScore.GetComponent<TextMeshProUGUI>().text = "HIGH SCORE: " + PlayerPrefs.GetInt("HighestScore", 0);
             else HighScore.GetComponent<TextMeshProUGUI>().text = "YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
         }
-
-
-        boardScale = PlayerPrefs.GetInt("boardScale", 1);
-        difficulty = PlayerPrefs.GetInt("difficulty", 0);
-        ButtonColorTextControllerForCustomGame(boardScale, sizeButton);
-        ButtonColorTextControllerForCustomGame(difficulty, difficultyButton);
-        if (LootLockerManager.Instance != null) CheckForPlayerName();
+        if (PlayFabManager.Instance != null) StartCoroutine (CheckForPlayerName());
         
     }
     public void StartGame()
@@ -303,8 +303,10 @@ public class MainMenuManager : MonoBehaviour
     public GameObject noConnectionPanel;
 
     public TextMeshProUGUI highscoreTitle;
+    public Button GlobalButton;
+    public Button CountryButton;
+    public Button CityButton;
 
-    private const string LEADERBOARD_KEY = "global_high_scores";
     public void NoConnectionPanel()
     {
         if (noConnectionPanel.activeSelf)
@@ -318,96 +320,80 @@ public class MainMenuManager : MonoBehaviour
     }
     public void ShowHighScoreBoardPanel(int listType)
     {
-        if ((HighscoreBoardPanel.activeSelf || noConnectionPanel.activeSelf) && !(listType == 1 || listType == 2 || listType == 0))
-        {
-            HighscoreBoardPanel.SetActive(false);
-            noConnectionPanel.SetActive(false);
-            return;
-        }
-
-
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            Debug.Log("internet yok");
             noConnectionPanel.SetActive(true);
             return;
         }
+        if (listType==-1)
+        { 
+            HighscoreBoardPanel.SetActive(false); 
+            GlobalButton.interactable = true;
+            CountryButton.interactable = true;
+            CityButton.interactable = true;
 
+            return; 
+        }
 
         HighscoreBoardPanel.SetActive(true);
-        foreach (Transform child in scoreContentParent.transform) Destroy(child.gameObject);
+        foreach (Transform child in scoreContentParent.transform)
+            Destroy(child.gameObject);
 
         string title = "HIGHEST SCORES ";
-        if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR ";
+        string countryCode = PlayerPrefs.GetString("CountryCode", "");
+        string city = PlayerPrefs.GetString("City", "");
 
-            switch (listType)
+        switch (listType)
         {
-            case 0: // GLOBAL
+            case 0:
                 title += "GLOBAL";
+                if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR GLOBAL";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
                 break;
-            case 1: // ÜLKE
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                    title += "MY COUNTRY";// Ülke kodunu PlayerPrefs'ten al.
-                else title += "ÜLKEM";
+            case 1:
+                title += "MY COUNTRY";
+                if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR ÜLKEM";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
                 break;
-            case 2: // ÞEHÝR
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code)
-                    title += "MY CITY";
-                else title += "ÞEHRÝM";
-                break; // Fonksiyonu bitir.
+            case 2:
+                title += "MY CITY";
+                if (PlayerPrefs.GetString("Locale") == turkish.Identifier.Code) title = "EN YÜKSEK SKORLAR ÞEHRÝM";
+                GlobalButton.interactable = false;
+                CountryButton.interactable = false;
+                CityButton.interactable = false;
+                break;
         }
         highscoreTitle.text = title;
 
-        LootLockerSDKManager.GetScoreList(LEADERBOARD_KEY, 1000, (response) =>
+        // YENÝ PlayFab çaðrýsý
+        PlayFabManager.Instance.GetFilteredLeaderboard(listType, countryCode, city, (leaderboardList) =>
         {
-            if (response.success)
+            if (leaderboardList != null)
             {
-                LootLockerLeaderboardMember[] scores = response.items;
-                string metadata;
-                for (int i = 0; i < scores.Length; i++)
+                for (int i = 0; i < leaderboardList.Count; i++)
                 {
-                    metadata = scores[i].metadata;
-                    if (listType == 0)
-                    {
-                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
-                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                        rankText.text = scores[i].rank + ".";
-                        nameText.text = scores[i].player.name;
-                        scoreText.text = scores[i].score.ToString();
-                    }
-                    if (listType == 1 && metadata.Contains(PlayerPrefs.GetString("CountryCode")))
-                    {
-                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
-                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                        rankText.text = (i + 1) + ".";
-                        nameText.text = scores[i].player.name;
-                        scoreText.text = scores[i].score.ToString();
-                    }
-                    if (listType == 2 && metadata.Contains(PlayerPrefs.GetString("City")))
-                    {
+                    GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
+                    TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
+                    TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
+                    TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
 
-                        GameObject entry = Instantiate(scoreEntryPrefab, scoreContentParent);
-                        TextMeshProUGUI rankText = entry.transform.Find("RankText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI nameText = entry.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI scoreText = entry.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>();
-                        rankText.text = (i + 1) + ".";
-                        nameText.text = scores[i].player.name;
-                        scoreText.text = scores[i].score.ToString();
-                    }
-
+                    rankText.text = (i + 1) + "."; // Sadece filtrelenmiþ listedeki sýrayý kullanýyoruz.
+                    nameText.text = leaderboardList[i].DisplayName;
+                    scoreText.text = leaderboardList[i].StatValue.ToString();
                 }
+                GlobalButton.interactable = !(listType==0);
+                CountryButton.interactable = !(listType==1);
+                CityButton.interactable = !(listType==2);
             }
-
             else
             {
-                Debug.Log("liste getirilemedi");
+                Debug.LogError("Liderlik listesi getirilemedi.");
             }
         });
-
     }
 
     [Header("Player Name")]
@@ -418,33 +404,50 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI statusText;
     public Button confirmNameButton;
     public TextMeshProUGUI welcomText;
-    void CheckForPlayerName()
+    IEnumerator CheckForPlayerName()
     {
+        // Login tamamlanana kadar bekle
+        while (!PlayFabManager.Instance.IsLoggedIn)
+            yield return null;
+
         string playerName = PlayerPrefs.GetString(PLAYER_NAME_KEY);
-        if (String.IsNullOrEmpty(playerName) && Application.internetReachability != NetworkReachability.NotReachable)
+
+        if (string.IsNullOrEmpty(playerName) && Application.internetReachability != NetworkReachability.NotReachable)
         {
             FirstLanguageChecker();
             setNamePanel.SetActive(true);
+            yield break; // Ýsim boþsa ve panel açýldýysa devam etme
         }
-        if (!String.IsNullOrEmpty(playerName))
+        
+
+        if (!string.IsNullOrEmpty(playerName))
         {
-            LootLockerManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+            if (!nameSavedOnPlayFab)
             {
-                if (nameExists)
+                PlayFabManager.Instance.SetPLayerName(playerName, (result) =>
                 {
-                    if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                    else welcomText.text = "HOÞGELDÝN: " + playerName;
-                }
-                else
-                {
-                    LootLockerManager.Instance.SetPlayerName(playerName);
-                    if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                    else welcomText.text = "HOÞGELDÝN: " + playerName;
-                }
-            });
-            ScoreChecker();
+                    if (result)
+                    {
+                        nameSavedOnPlayFab = true;
+                    }
+                    else
+                    {
+                        Debug.Log("Bu isim alýnmýþtir loo");
+                        setNamePanel.SetActive(true);
+                        statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                            ? "This username is used by another player"
+                            : "Bu kullanýcý adý kullanýlýyor";
+                        statusText.color = Color.red;
+                    }
+                });
+            }
+            welcomText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                       ? "WELCOME: " + playerName
+                       : "HOÞGELDÝN: " + playerName;
+            ScoreChecker(); // Giriþ tamamlandýktan sonra skor kontrolü
         }
     }
+
     public void ConfirmPlayerName()
     {
         string playerName = nameField.text;
@@ -457,31 +460,41 @@ public class MainMenuManager : MonoBehaviour
 
         confirmNameButton.interactable = false;
         statusText.color = Color.white;
-        if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) statusText.text = "Checking...";
-        else statusText.text = "Kontrol ediliyor...";
+        statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+            ? "Checking..."
+            : "Kontrol ediliyor...";
 
-        LootLockerManager.Instance.CheckIfPlayerExists(playerName, (nameExists) =>
+        if (!nameSavedOnPlayFab)
         {
-            confirmNameButton.interactable = true;
-            if (nameExists)
+            PlayFabManager.Instance.SetPLayerName(playerName, (result) =>
             {
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) statusText.text = "This username is used by another player";
-                else statusText.text = "Bu kullanýcý adý kullanýlýyor";
-                statusText.color = Color.red;
-            }
-            else
-            {
-                statusText.text = "Name saved!";
-                LootLockerManager.Instance.SetPlayerName(playerName);
-                setNamePanel.SetActive(false);
-                if (PlayerPrefs.GetString("Locale") == english.Identifier.Code) welcomText.text = "WELCOME: " + playerName;
-                else welcomText.text = "HOÞGELDÝN: " + playerName;
-                HowToPlayPanelButton();
-                
-            }
-        });
+                if (result)
+                {
+                    Debug.Log("Bu isim kullanýlmýo");
+                    statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "Name saved!"
+                        : "Ýsim kaydedildi!";
+                    setNamePanel.SetActive(false);
+                    welcomText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "WELCOME: " + playerName
+                        : "HOÞGELDÝN: " + playerName;
+                    nameSavedOnPlayFab = true;
+                    HowToPlayPanelButton();
+                }
+                else
+                {
+                    Debug.Log("Bu isim alýnmýþtir loo");
+                    statusText.text = PlayerPrefs.GetString("Locale") == english.Identifier.Code
+                        ? "This username is used by another player"
+                        : "Bu kullanýcý adý kullanýlýyor";
+                    statusText.color = Color.red;
+                } 
+                confirmNameButton.interactable = true;
+            });
+        }
     }
-    System.Collections.IEnumerator ShowErrorText()
+
+    IEnumerator ShowErrorText()
     {
         errorText.text = "Username must be longer than 3 characters!";
         float timer = 0f;
@@ -499,9 +512,10 @@ public class MainMenuManager : MonoBehaviour
         int highScore = PlayerPrefs.GetInt("HighestScore", -1);
         if (Application.internetReachability != NetworkReachability.NotReachable && highScore != -1)
         {
-            if (LootLockerManager.Instance != null)
+            if (PlayFabManager.Instance != null)
             {
-                LootLockerManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
+                PlayFabManager.Instance.SubmitScore(PlayerPrefs.GetInt("HighestScore"));
+
             }
         }
     }
@@ -509,34 +523,41 @@ public class MainMenuManager : MonoBehaviour
     [Header("CreditPanel")]
     [SerializeField] private GameObject creditPanel;
     [SerializeField] private GameObject creditText;
-
+    bool isCreditPanelActive=false;
     public void CreditPanelOpen()
     {
         if (creditPanel.activeSelf)
         {
+            isCreditPanelActive = false;
             creditPanel.SetActive(false);
         }
         else
         {
+            isCreditPanelActive = true;
             creditPanel.SetActive(true);
             StartCoroutine(CreditTextPanel());
         }
     }
-    System.Collections.IEnumerator CreditTextPanel()
+    IEnumerator CreditTextPanel()
     {
         Vector3 startPos = new Vector3(creditText.transform.position.x, 0, 0);
         creditText.transform.position = startPos;
-        Vector3 targetPos = new Vector3(creditText.transform.position.x, creditText.transform.position.y + 3000, creditText.transform.position.z);
+        Vector3 targetPos = new Vector3(creditText.transform.position.x, creditText.transform.position.y+Screen.height, creditText.transform.position.z);
         float timer = 0;
         float duration = 20f;
         while (timer < duration)
         {
+            if(!isCreditPanelActive) break;
             creditText.transform.position = Vector3.Lerp(startPos, targetPos, timer / duration);
             timer += Time.deltaTime;
             yield return null;
         }
-        yield return new WaitForSeconds(1f);
-        creditPanel.SetActive(false);
+        if (isCreditPanelActive)
+        {
+            isCreditPanelActive = false;
+            yield return new WaitForSeconds(3f);
+            creditPanel.SetActive(false);
+        }
     }
 
     [Header("How to Play")]

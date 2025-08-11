@@ -37,7 +37,16 @@ public class GridManager : MonoBehaviour
     {
         GenerateGrid();
     }
-
+    public void CleanEmptyBlockParents()
+    {
+        foreach(var blockParent in GetComponentsInChildren<Transform>())
+        {
+            if (blockParent.GetComponent<BlockDragger>() != null && blockParent.GetComponentInChildren<MeshRenderer>()==null)
+            {
+                Destroy(blockParent.gameObject);
+            }
+        }
+    }
     void GenerateGrid()
     {
         if (gridCellPrefab == null)

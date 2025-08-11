@@ -85,9 +85,13 @@ public class UIManager : MonoBehaviour
             else highScore.text = "EN YÜKSEK SKOR: " + PlayerPrefs.GetInt("HighestScore", 0);
 
         }
-        if (watchAdButton != null && AdsManager.Instance!=null)
+        if (watchAdButton != null && AdsManager.Instance!=null && !AdsManager.Instance.adWatched)
         {
-            watchAdButton.gameObject.SetActive(true);
+            watchAdButton.gameObject.SetActive(true);   
+        }
+        if (AdsManager.Instance.adWatched)
+        {
+            AdsManager.Instance.adWatched = false;
         }
     }
 
@@ -142,7 +146,7 @@ public class UIManager : MonoBehaviour
         panelActive=false;
         panel.SetActive(false);
         gameoverText.SetActive(false);
-        scoreTextEnd.SetActive(false);
+        if(scoreTextEnd!=null) scoreTextEnd.SetActive(false);
         scoreText.SetActive(true);
         if (watchAdButton != null && AdsManager.Instance != null)
         {
@@ -155,7 +159,7 @@ public class UIManager : MonoBehaviour
         watchAdButton.interactable = false;
 
         // Reklamý göstermesi için AdsManager'ý çaðýr.
-        AdsManager.Instance.ShowRewardedAd();
+        if(AdsManager.Instance!=null)AdsManager.Instance.ShowRewardedAd();
     }
     public void NextTimedLevel()
     {

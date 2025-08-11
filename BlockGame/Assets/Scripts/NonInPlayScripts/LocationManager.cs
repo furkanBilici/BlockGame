@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using LootLocker.Requests;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,6 +65,7 @@ public class LocationManager : MonoBehaviour
                     city = info.city;
                     PlayerPrefs.SetString("CountryCode",countryCode);
                     PlayerPrefs.SetString("City",city);
+                    if(PlayFabManager.Instance!=null)PlayFabManager.Instance.SavePlayerLocation(countryCode,city);
                 }
                 else
                 {
@@ -78,6 +78,9 @@ public class LocationManager : MonoBehaviour
             }
         }
     }
+
+    //lootlocker kýsmý eskidir!!!
+    /*
     private void UploadOrUpdatePlayerLocationFile(string countryCode, string city)
     {
         // 1. Veri objesini oluþtur ve JSON'a çevir.
@@ -153,5 +156,5 @@ public class LocationManager : MonoBehaviour
                 Debug.LogError($"Konum dosyasý güncellenemedi: " + response.text);
             }
         });
-    }
+    }*/
 }

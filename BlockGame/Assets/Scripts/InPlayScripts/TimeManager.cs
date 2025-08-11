@@ -35,6 +35,16 @@ public class TimeManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (PlayerPrefs.GetInt("AdWatched", 0) == 1)
+        {
+            if (timeSecond < 20)
+            {
+                timeSecond += 20f;
+            }
+            time.color = Color.white;
+            PlayerPrefs.SetInt("AdWatched", 0);
+            PlayerPrefs.Save();
+        }
         if (timeSecond <= 0 || ScoreManager.Instance.GetCurrentScore()>=point )
         {
             FinishGame();
@@ -53,6 +63,7 @@ public class TimeManager : MonoBehaviour
                 timeSecond -= 0.02f;
             }
         }
+        
     }
     void FinishGame()
     {

@@ -98,7 +98,7 @@ public class ScoreManager : MonoBehaviour
         }
         if(Application.internetReachability!= NetworkReachability.NotReachable)
         {
-            if (LootLockerManager.Instance != null && UIManager.Instance.GameType==0) LootLockerManager.Instance.SubmitScore(highestScore);
+            if (PlayFabManager.Instance != null && UIManager.Instance.GameType==0) PlayFabManager.Instance.SubmitScore(highestScore);
         }
     }
     public int GetCurrentScore()
